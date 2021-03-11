@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose').set('debug', true);
 const path = require('path');
 
 
@@ -17,4 +18,13 @@ app.use((req, res, next) => {
     next();
   });
 
-  app.listen(8080);
+  mongoose
+  .connect(
+    'mongodb+srv://sergidoce:iuGinQ4Aj_RB@Nq@safetyout.pvtcw.mongodb.net/SafetyOut?retryWrites=true&w=majority',
+    {useNewUrlParser: true, useUnifiedTopology: true}
+  )
+  .then(result => {
+    app.listen(8080);
+  })
+  .catch(err => console.log(err));
+
