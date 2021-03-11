@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose').set('debug', true);
+require('dotenv').config()
 const path = require('path');
 
 
@@ -17,10 +18,10 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
   });
-
+  
   mongoose
   .connect(
-    'mongodb+srv://sergidoce:iuGinQ4Aj_RB@Nq@safetyout.pvtcw.mongodb.net/SafetyOut?retryWrites=true&w=majority',
+    'mongodb+srv://' + process.env.MONGO_DB_USER + ':' + process.env.MONGO_DB_PASSWORD + 'iuGinQ4Aj_RB@Nq@safetyout.pvtcw.mongodb.net/SafetyOut?retryWrites=true&w=majority',
     {useNewUrlParser: true, useUnifiedTopology: true}
   )
   .then(result => {
