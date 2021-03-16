@@ -8,7 +8,7 @@ exports.signUp = (req, res, next) => {
 
                 res.status(409).json({message:'The email is already being used'});
 
-                const error = new Error("The email is already being used");
+                const error = new Error("The email is already being ued");
                 error.statusCode = 409;
                 throw error;
             }

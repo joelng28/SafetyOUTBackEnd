@@ -15,7 +15,7 @@ describe("Registra un usuario con información valida: ",() => {
             username: "sergidoce",
             name: "Sergi",
             surnames: "Doce Planas",
-            email: "sergi.dos@estudiantat.upc.edu",
+            email: "sergi.dol@estudiantat.upc.edu",
             password: "123456",
             birthday: new Date(1999, 9, 12),
             gender: "Male",
