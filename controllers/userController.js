@@ -53,7 +53,7 @@ exports.logIn = (req, res, next) => {
             }
             else{
                 loadedUser = user;
-                return req.body.password === loadedUser.password;
+                return loadedUser.validPassword(req.body.password);
             }
         })
         .then(isEqual => {
