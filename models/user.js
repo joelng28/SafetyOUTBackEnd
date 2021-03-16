@@ -46,6 +46,7 @@ userSchema.method('validPassword', async function(unhashed) {
     return await bcrypt.compare(unhashed,user.password);
 })
 
+
 userSchema.pre('save',async function(next) {
     const user=this; 
      const hash= await bcrypt.hash(user.password,10);
