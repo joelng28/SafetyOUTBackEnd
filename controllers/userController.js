@@ -48,9 +48,9 @@ exports.logIn = (req, res, next) => {
     User.findOne({email:req.body.email})
         .then(user => {
             if(!user){
-                res.status(401).json({message: "A user with this email could not be found"});
+                res.status(404).json({message: "A user with this email could not be found"});
                 const error = new Error("A user with this email could not be found");
-                error.statusCode = 401;
+                error.statusCode = 404;
                 throw error;
             }
             else{
