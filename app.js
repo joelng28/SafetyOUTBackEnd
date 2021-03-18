@@ -19,6 +19,9 @@ app.use((req, res, next) => {
     next();
   });
   
+  const userRoutes = require('./routes/userRoutes');
+  app.use('/user', userRoutes);
+
   mongoose
   .connect(
     'mongodb+srv://' + process.env.MONGO_DB_USER + ':' + process.env.MONGO_DB_PASSWORD + '@safetyout.pvtcw.mongodb.net/SafetyOut?retryWrites=true&w=majority',
