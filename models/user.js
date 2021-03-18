@@ -53,4 +53,9 @@ userSchema.pre('save',async function(next) {
      user.password=hash;
 })
 
+userSchema.method('ConsultarProfile', async function(unhashed) {
+    const user = this;
+    return user.profileImage;
+})
+
 module.exports = mongoose.model("User", userSchema);
