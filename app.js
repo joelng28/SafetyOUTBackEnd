@@ -22,13 +22,14 @@ app.use((req, res, next) => {
   const userRoutes = require('./routes/userRoutes');
   app.use('/user', userRoutes);
 
+  console.log("Changes made");
   mongoose
   .connect(
     'mongodb+srv://' + process.env.MONGO_DB_USER + ':' + process.env.MONGO_DB_PASSWORD + '@safetyout.pvtcw.mongodb.net/SafetyOut?retryWrites=true&w=majority',
     {useNewUrlParser: true, useUnifiedTopology: true}
   )
   .then(result => {
-    app.listen(8080);
+    app.listen(process.env.PORT || 5000);
   })
   .catch(err => console.log(err));
 
