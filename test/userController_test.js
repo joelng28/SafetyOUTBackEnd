@@ -5,8 +5,9 @@ const expect = require("chai").expect;
 const user = require("../models/user");
 
 chai.use(chaiHttp);
-const url = "http://localhost:8080";
-
+const localhost_url = "http://localhost:8080";
+const heroku_url = "https://safetyout.herokuapp.com"
+const url = heroku_url;
 
 const userEmail = randomstring.generate(8) + "@estudiantat.upc.edu";
 
