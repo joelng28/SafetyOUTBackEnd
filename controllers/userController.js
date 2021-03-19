@@ -1,7 +1,7 @@
 const User = require('../models/user');
 
 exports.signUp = (req, res, next) => {
-
+   
     User.findOne({email: req.body.email})
         .then(user => {
             if(user){
@@ -68,6 +68,25 @@ exports.logIn = (req, res, next) => {
             else{
                 res.status(200).json({message: "Logged In correctly!", userId: loadedUser._id.toString()});
             }
+        })
+        .catch(err => {
+            if(!err.statusCode)err.statusCode=500;
+            next(err);
+        });
+}
+
+exports.deleteAccount = (req, res, next) => {
+    User.findOneAndRemove({email:req.body.email}) 
+        .then(user => {
+            if(user){
+                res.status(201).json({message: 'User deleted!'});
+            }
+            else {
+                res.status(404).json({message: "A user with this email could not be found"});
+                const error = new Error("A user with this email could not be found");
+                error.statusCode = 404;
+                throw error;
+            } 
         })
         .catch(err => {
             if(!err.statusCode)err.statusCode=500;

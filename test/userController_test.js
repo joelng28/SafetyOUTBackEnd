@@ -90,3 +90,41 @@ describe("Inici de sessió: ",() => {
         });
     });
 });
+
+describe("Esborra usuari: ",() => {
+    
+    it('Retorna status 201 quan es borra un usuari amb email registrat', (done) => {
+        const usuari = new user({
+            username: "delete",
+            name: "delete",
+            surnames: "delete",
+            email: "delete@estudiantat.upc.edu",
+            password: "delete",
+            birthday:  new Date(1999, 9, 12),
+            gender: "delete",
+            profileImage: "delete"
+        });
+        usuari.save()
+        chai.request(url)
+        .delete('/user/deleteaccount')
+        .send({
+            email: "delete@estudiantat.upc.edu"
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(201);
+            done();
+        })
+    });
+    
+    it("Retorna status 409 quan s'intenta borrar un usuari amb email no registrat", (done) => {
+        chai.request(url)
+        .delete('/user/deleteaccount')
+        .send({
+            email: userEmail,
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(409);
+            done();
+        });
+    });
+});
