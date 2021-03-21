@@ -80,17 +80,17 @@ exports.consultaProfile = (req, res, next) => {
     let loadedUser;
 
     
-    User.findOne({name:req.body.username}) //tambe podriem buscar amb nom i cognoms, no nomes username
+    User.findOne({email:req.body.email}) //tambe podriem buscar amb nom i cognoms, 
         .then(user => {
             if(!user){
-                res.status(404).json({message: "A user with this username could not be found"});
-                const error = new Error("A user with this username could not be found");
+                res.status(404).json({message: "A user with this email could not be found"});
+                const error = new Error("A user with this email could not be found");
                 error.statusCode = 404;
                 throw error;
             }
             else{
                 loadedUser = user;
-                return loadedUser.ConsultarProfile(req.body.profileImage);
+                res.status(200).json({user:loadedUser});
             }
         })
         .catch(err => {
