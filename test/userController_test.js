@@ -69,7 +69,7 @@ describe("Inici de sessió: ",() => {
         chai.request(url)
         .post('/user/login')
         .send({
-            email: randomstring.generate(8),
+            email: randomstring.generate(8) + "@estudiantat.upc.edu",
             password: "123456",
         })
         .end(function(err, res){
@@ -89,4 +89,31 @@ describe("Inici de sessió: ",() => {
             done();
         });
     });
+});
+
+describe("Consulta perfil",() => {
+    it("Retorna status 200 quan es consulta un perfil qualsevol amb èxit", (done) => {
+        chai.request(url)
+        .get('/user/consultaProfile')
+        .send({
+            email: userEmail
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(200);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta consultar perfil d'un usuari que no existeix", (done) => {
+        chai.request(url)
+        .get('/user/consultaProfile')
+        .send({
+            email: randomstring.generate(8) + "@estudiantat.upc.edu"
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+    
+
 });
