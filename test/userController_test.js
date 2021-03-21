@@ -1,6 +1,8 @@
 const chai = require("chai");
 const randomstring = require("randomstring")
+const randomDate = require("dateRandom")
 const chaiHttp = require("chai-http")
+const image  = require("image")
 const expect = require("chai").expect;
 const user = require("../models/user");
 
@@ -9,6 +11,16 @@ const url = "http://localhost:8080";
 
 
 const userEmail = randomstring.generate(8) + "@estudiantat.upc.edu";
+
+const userName = randomstring.generate(8);
+
+const name = randomstring.generate(8);
+
+const surNames = randomstring.generate(8);
+
+const birth = randomDate.generate(8);
+
+const profImage = image.generate;
 
 describe("Registre d'usuari: ",() => {
 
@@ -88,4 +100,41 @@ describe("Inici de sessió: ",() => {
             done();
         });
     });
+});
+
+describe("Consulta perfil",() => {
+    it("Retorna status 200 quan es consulta un perfil qualsevol amb èxit", (done) => {
+        chai.request(url)
+        .get('/user/consultaProfile')
+        .send({
+            email: userEmail,
+            username: userName,
+            name: name,
+            surnames: surNames,
+            birthday: birth,
+            profileImage: profImage,
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(200);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta consultar perfil d'un usuari que no existeix", (done) => {
+        chai.request(url)
+        .post('/user/consultaProfile')
+        .send({
+            email: userEmail,
+            username: userName,
+            name: name,
+            surnames: surNames,
+            birthday: birth,
+            profileImage: profImage,
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+    
+
 });
