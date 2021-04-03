@@ -1,5 +1,33 @@
 const User = require('../models/user');
 
+
+
+exports.checkEmail = (req,res,next) => {
+
+    User.findOne({email: req.body.email})
+    .then(user => {
+            if(user){
+
+                res.status(409).json({message:'The email is already being used'});
+
+                const error = new Error("The email is already being used");
+                error.statusCode = 409;
+                throw error;
+            }
+            else{
+                res.status(200).json({message: 'The email has not been used yet'});
+            }
+        }
+    )
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    }); 
+}
+
+
 exports.signUp = (req, res, next) => {
 
     User.findOne({email: req.body.email})
@@ -13,7 +41,6 @@ exports.signUp = (req, res, next) => {
                 throw error;
             }
             else{
-
                 const birthdayArray = req.body.birthday.slice("-");
                 const day = birthdayArray[2];
                 const month = birthdayArray[1];

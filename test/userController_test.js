@@ -23,7 +23,7 @@ describe("Registre d'usuari: ",() => {
             password: "123456",
             birthday: "1999-10-13",
             gender: "Male",
-            profileImage: "" 
+            profileImage: "path/to/profile/image" 
         })
         .end(function(err, res){
             expect(res).to.have.status(201);
