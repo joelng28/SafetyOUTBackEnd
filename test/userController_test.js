@@ -22,7 +22,7 @@ describe("Registre d'usuari: ",() => {
             surnames: "Doce Planas",
             email: userEmail,
             password: "123456",
-            birthday: new Date(1999, 9, 12),
+            birthday: "1999-10-13",
             gender: "Male",
             profileImage: "path/to/profile/image" 
         })

@@ -13,13 +13,19 @@ exports.signUp = (req, res, next) => {
                 throw error;
             }
             else{
+
+                const birthdayArray = req.body.birthday.slice("-");
+                const day = birthdayArray[2];
+                const month = birthdayArray[1];
+                const year = birthdayArray[0];
+
                 const user = new User({
                     username: req.body.username,
                     name: req.body.name,
                     surnames: req.body.surnames,
                     email: req.body.email,
                     password: req.body.password,
-                    birthday: req.body.birthday,
+                    birthday: new Date(year, month, day),
                     gender: req.body.gender,
                     profileImage: req.body.profileImage
                 });
