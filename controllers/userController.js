@@ -20,7 +20,6 @@ exports.signUp = (req, res, next) => {
                 const year = birthdayArray[0];
 
                 const user = new User({
-                    username: req.body.username,
                     name: req.body.name,
                     surnames: req.body.surnames,
                     email: req.body.email,
