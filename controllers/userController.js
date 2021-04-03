@@ -1,5 +1,5 @@
 const User = require('../models/user');
-
+const jwt = require("jsonwebtoken");
 
 
 exports.checkEmail = (req,res,next) => {
@@ -58,7 +58,8 @@ exports.signUp = (req, res, next) => {
             
                 user.save()
                     .then(result =>{
-                        res.status(201).json({message: 'User created!', userId: result._id});
+                        const token = jwt.sign({email: result.email, userId: result._id.toString()}, process.env.JWT_SECRET);
+                        res.status(201).json({token: token, message: 'User created!', userId: result._id});
                     })
                     .catch(err => {
                         if(!err.statusCode){
@@ -98,7 +99,8 @@ exports.logIn = (req, res, next) => {
                 throw error;
             }
             else{
-                res.status(200).json({message: "Logged In correctly!", userId: loadedUser._id.toString()});
+                const token = jwt.sign({email: loadedUser.email, userId: loadedUser._id.toString()}, process.env.JWT_SECRET);
+                res.status(200).json({token: token, message: "Logged In correctly!", userId: loadedUser._id.toString()});
             }
         })
         .catch(err => {
