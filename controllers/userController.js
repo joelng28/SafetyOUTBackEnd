@@ -4,7 +4,7 @@ const User = require('../models/user');
 
 exports.checkEmail = (req,res,next) => {
 
-    User.findOne({email: req.body.email})
+    User.findOne({email: req.params.email})
     .then(user => {
             if(user){
 
