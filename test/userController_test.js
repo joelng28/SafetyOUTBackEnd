@@ -15,7 +15,7 @@ describe("Registre d'usuari: ",() => {
 
     it('Retorna status 201 quan es crea un usuari amb email no registrat', (done) => {
         chai.request(url)
-        .put('/user/signup')
+        .post('/user/signup')
         .send({
             name: "Sergi",
             surnames: "Doce Planas",
@@ -32,7 +32,7 @@ describe("Registre d'usuari: ",() => {
     });
     it("Retorna status 409 quan s'intenta registrar un usuari amb email ja registrat", (done) => {
         chai.request(url)
-        .put('/user/signup')
+        .post('/user/signup')
         .send({
             name: "Sergi",
             surnames: "Doce Planas",
@@ -92,10 +92,7 @@ describe("Inici de sessió: ",() => {
 describe("Consulta perfil",() => {
     it("Retorna status 200 quan es consulta un perfil qualsevol amb èxit", (done) => {
         chai.request(url)
-        .get('/user/consultaProfile')
-        .send({
-            email: userEmail
-        })
+        .get('/user/getUserInfo/' + "604ca4f3482d773168499269")
         .end(function(err, res){
             expect(res).to.have.status(200);
             done();
@@ -103,10 +100,7 @@ describe("Consulta perfil",() => {
     });
     it("Retorna status 404 quan s'intenta consultar perfil d'un usuari que no existeix", (done) => {
         chai.request(url)
-        .get('/user/consultaProfile')
-        .send({
-            email: randomstring.generate(8) + "@estudiantat.upc.edu"
-        })
+        .get('/user/getUserInfo/' + "604ca4f3482d773160499269")
         .end(function(err, res){
             expect(res).to.have.status(404);
             done();

@@ -109,28 +109,27 @@ exports.logIn = (req, res, next) => {
         });
 }
 
-exports.consultaProfile = (req, res, next) => {
+exports.getUserInfo = (req, res, next) => {
 
     let loadedUser;
 
-    
-    User.findOne({email:req.body.email}) //tambe podriem buscar amb nom i cognoms, 
+    User.findById(req.params.userId) 
         .then(user => {
             if(!user){
-                res.status(404).json({message: "A user with this email could not be found"});
-                const error = new Error("A user with this email could not be found");
+                res.status(404).json({message: "A user with this id could not be found"});
+                const error = new Error("A user with this id could not be found");
                 error.statusCode = 404;
                 throw error;
             }
             else{
                 loadedUser = user;
+                console.log(loadedUser);
                 res.status(200).json({user:loadedUser});
             }
         })
         .catch(err => {
             if(!err.statusCode)err.statusCode=500;
             next(err);
-        });
-        
+        });       
 }
 
