@@ -59,7 +59,7 @@ exports.signUp = (req, res, next) => {
                 user.save()
                     .then(result =>{
                         const token = jwt.sign({email: result.email, userId: result._id.toString()}, process.env.JWT_SECRET);
-                        res.status(201).json({token: token, message: 'User created!', userId: result._id});
+                        res.status(201).json({token: token, message: 'User created!', userId: result._id.toString()});
                     })
                     .catch(err => {
                         if(!err.statusCode){
