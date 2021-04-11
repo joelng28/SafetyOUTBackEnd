@@ -1,14 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const bcrypt = require('bcrypt');
 
 const placeSchema = new Schema(
     {
-        id_espai:{
-            type:String,
-            required:true
-        },
-        type_espai:{
+        place_type:{
             type: String,
         },
         city:{
@@ -19,34 +14,78 @@ const placeSchema = new Schema(
             type:String,
             required:true
         },
-        adress:{
+        address:{
             type:String,
             required:true
         },
-        description_space:{
+        place_description:{
             type:String,
             required:true
         },
         max_capacity:{
-            type:Intl,
+            type:Number,
             required:true
         },
-        hora_apertura:{
-            type:Date, //hour
-            required:true
-        },  
-        hora_tancament:{
-            type:Date, //hour
-            required:true
-        }      
+        schedules:{
+            monday:{
+                opening_time:{
+                    type: String
+                },
+                closing_time:{
+                    type:String
+                }
+            },
+            tuesday:{
+                opening_time:{
+                    type: String
+                },
+                closing_time:{
+                    type:String
+                }
+            },
+            wednseday:{
+                opening_time:{
+                    type: String
+                },
+                closing_time:{
+                    type:String
+                }
+            },
+            thursday:{
+                opening_time:{
+                    type: String
+                },
+                closing_time:{
+                    type:String
+                }
+            },
+            friday:{
+                opening_time:{
+                    type: String
+                },
+                closing_time:{
+                    type:String
+                }
+            },
+            saturday:{
+                opening_time:{
+                    type: String
+                },
+                closing_time:{
+                    type:String
+                }
+            },
+            sunday:{
+                opening_time:{
+                    type: String
+                },
+                closing_time:{
+                    type:String
+                }
+            }
+        }        
     },
     {timestamps:true}
 );
-
-userSchema.method('numAssistents', async function(unhashed) {
-    
-})
-
-
 
 module.exports = mongoose.model("Place", placeSchema);

@@ -1,24 +1,24 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const AssiSchema = new Schema(
+const assistanceSchema = new Schema(
     {
-        data_assistencia:{
+        user_id:{
+            type: Schema.ObjectId 
+        },
+        place_id:{
+            type: Schema.ObjectId
+        },
+        dateTime:{
             type:Date,
             required:true
         },
-        hora_asssitencia:{
-            type: Date, //hour
-        },
-        temps_assistencia:{
-            type:String,
-
+        num_hours:{
+            type:Number,
             required: true
         },        
     },
     {timestamps:true}
 );
 
-
-
-module.exports = mongoose.model("Place", placeSchema);
+module.exports = mongoose.model("Assistance", assistanceSchema);
