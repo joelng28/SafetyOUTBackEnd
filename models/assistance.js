@@ -10,7 +10,7 @@ const assistanceSchema = new Schema(
             type: Schema.ObjectId
         },
         dateTime:{
-            type:Date,
+            type:String,
             required:true
         },
         num_hours:{
