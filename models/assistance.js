@@ -6,8 +6,13 @@ const assistanceSchema = new Schema(
         user_id:{
             type: Schema.ObjectId 
         },
-        place_id:{
-            type: Schema.ObjectId
+        place:{
+            longitude:{
+                type:String
+            },
+            latitude:{
+                type:String
+            }
         },
         dateTime:{
             type:String,
