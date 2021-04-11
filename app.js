@@ -20,11 +20,9 @@ app.use((req, res, next) => {
   });
   
   const userRoutes = require('./routes/userRoutes');
-  const placeRoutes = require('./routes/placeRoutes');
   const assistanceRoutes = require('./routes/assistanceRoutes');
 
   app.use('/user', userRoutes);
-  app.use('/place', placeRoutes);
   app.use('/assistance', assistanceRoutes);
 
   mongoose
