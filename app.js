@@ -20,9 +20,13 @@ app.use((req, res, next) => {
   });
   
   const userRoutes = require('./routes/userRoutes');
-  app.use('/user', userRoutes);
+  const placeRoutes = require('./routes/placeRoutes');
+  const assistanceRoutes = require('./routes/assistanceRoutes');
 
-  console.log("Changes made");
+  app.use('/user', userRoutes);
+  app.use('/place', placeRoutes);
+  app.use('/assistance', assistanceRoutes);
+
   mongoose
   .connect(
     'mongodb+srv://' + process.env.MONGO_DB_USER + ':' + process.env.MONGO_DB_PASSWORD + '@safetyout.pvtcw.mongodb.net/SafetyOut?retryWrites=true&w=majority',
