@@ -12,20 +12,16 @@ exports.postAssistance = (req, res, next) => {
 
 
     User.findById(user_id)
-    .then(result => {
-        if(result){
-            Assistance.find({user_id: Mongoose.Types.ObjectId(user_id)})
-            .then(currentAssistances => {
+    .then(user => {
+        if(user){
+            Assistance.findOne({user_id: Mongoose.Types.ObjectId(user_id), place: {longitude: longitude, latitude: latitude}})
+            .then(assistanceFound => {
               
-                for(var i = 0; i < currentAssistances.length; i++){
-                    if(currentAssistances[i].place.latitude === latitude && currentAssistances[i].place.longitude === longitude){
-                        if(currentAssistances[i].dateTime === dateTime){
-                            res.status(409).json({message:"An assistance in this place with this user at this time already exists"});
-                            const error = new Error();
-                            error.statusCode = 409;
-                            throw error;
-                        }
-                    }
+                if(assistanceFound){
+                    res.status(409).json({message:"An assistance in this place with this user at this time already exists"});
+                    const error = new Error();
+                    error.statusCode = 409;
+                    throw error;
                 }
 
                 const assistance = new Assistance({
