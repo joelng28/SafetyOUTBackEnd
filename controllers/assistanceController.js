@@ -59,3 +59,37 @@ exports.postAssistance = (req, res, next) => {
 };
 
 
+exports.deleteAssistance = (req, res, next) => {
+
+    const userId = req.body.user_id;
+    const place = req.body.place;
+
+    Assistance.findOne({user_id: Mongoose.Types.ObjectId(userId), place: {longitude: place.longitude, latitude: place.latitude}})
+        .then(assistance => {
+            if(!assistance){
+                res.status(404).json({message:"An assistance in this place with this user could not be found"});
+                const error = new Error();
+                error.statusCode = 404;
+                throw error;
+            }
+
+            assistance.remove()
+                .then(result => {
+                    res.status(200).json({message:"The assistance was successfully deleted"});
+                })
+                .catch(err=>{
+                    if(!err.statusCode){
+                      err.statusCode = 500;
+                 }
+                    next(err);
+                });
+        })
+        .catch(err=>{
+            if(!err.statusCode){
+              err.statusCode = 500;
+         }
+            next(err);
+        });
+}
+
+
