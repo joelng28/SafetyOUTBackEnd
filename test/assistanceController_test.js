@@ -13,7 +13,7 @@ describe("Donar d'alta una nova assistència: ",() => {
 
     it("Retorna status 201 quan es dona d'alta una assistència nova", (done) => {
         chai.request(url)
-        .post('/assistance')
+        .post('/assistance/add')
         .send({
             user_id: "604ca4f3482d773168499269",
             place: {
@@ -30,7 +30,7 @@ describe("Donar d'alta una nova assistència: ",() => {
     });
     it("Retorna status 409 quan s'intenta donar d'alta una assistència amb un usuari que no existeix", (done) => {
         chai.request(url)
-        .post('/assistance')
+        .post('/assistance/add')
         .send({
             user_id: "604ca4f3482d773168499869",
             place: {
@@ -47,7 +47,7 @@ describe("Donar d'alta una nova assistència: ",() => {
     });
     it("Retorna status 409 quan s'intenta donar d'alta una assistència que ja existeix", (done) => {
         chai.request(url)
-        .post('/assistance')
+        .post('/assistance/add')
         .send({
             user_id: "604ca4f3482d773168499269",
             place: {
@@ -59,6 +59,42 @@ describe("Donar d'alta una nova assistència: ",() => {
         })
         .end(function(err, res){
             expect(res).to.have.status(409);
+            done();
+        });
+    });
+});
+
+describe("Modificar assistència: ",() => {
+
+    it("Retorna status 201 quan es modifica una assistència", (done) => {
+        chai.request(url)
+        .post('/assistance/modify')
+        .send({
+            user_id: "604ca4f3482d773168499269",
+            place: {
+                longitude:"59",
+                latitude:"13"
+            },
+            dateTime: "16:00",
+            num_hours:3
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(201);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta modificar una assistència que no existeix", (done) => {
+        chai.request(url)
+        .post('/assistance/modify')
+        .send({
+            user_id: "604ca4f3482d773168499269",
+            place: {
+                longitude:"59",
+                latitude:"14"
+            }
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(404);
             done();
         });
     });
