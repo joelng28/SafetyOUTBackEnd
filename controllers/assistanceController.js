@@ -54,6 +54,31 @@ exports.postAssistance = (req, res, next) => {
     })
 };
 
+exports.consultFutureAssistance = (req, res, next) => {
+
+    const user_id = req.body.user_id;
+
+  
+    User.findById(user_id)
+    .then(user => {
+        if(user){
+            Assistance.find({user_id: Mongoose.Types.ObjectId(user_id)})
+            .then(currentAssistances => {
+                if(currentAssistances.length==0) res.status(400).json({message:"The user has no future assistances"});
+                res.status(201).json({message:currentAssistances});
+            })
+            .catch(err=>{
+                if(!err.statusCode){
+                  err.statusCode = 500;
+             }
+                next(err);
+            });
+        }
+        else
+            res.status(409).json({message:"The user_id is not correct"});
+    })
+};
+
 exports.modifyAssistance = (req,res,next) => {
     const userId = req.body.user_id;
     const place = req.body.place;
@@ -115,5 +140,7 @@ exports.deleteAssistance = (req, res, next) => {
             next(err);
         });
 }
+
+
 
 

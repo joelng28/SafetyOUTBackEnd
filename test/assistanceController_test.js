@@ -64,6 +64,46 @@ describe("Donar d'alta una nova assistència: ",() => {
     });
 });
 
+describe("Consultar assistències: ",() => {
+
+    it("Retorna status 201 quan l'usuari existeix i té alguna asistència", (done) => {
+        chai.request(url)
+        .get('/assistance/consult')
+        .send({
+            user_id: "604ca4f3482d773168499269",
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(201);
+            done();
+        });
+    });
+
+    it("Retorna status 409 quan s'intenta consultar un usuari que no existeix", (done) => {
+        chai.request(url)
+        .get('/assistance/consult')
+        .send({
+            user_id: "604ca4f3482d773168499869",
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(409);
+            done();
+        });
+    });
+
+    it("Retorna status 400 quan s'intenta consultar un usuari sense assistències futures", (done) => {
+        chai.request(url)
+        .get('/assistance/consult')
+        .send({
+            user_id: "604cb1aa228a8c10a42ce241",
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(400);
+            done();
+        });
+    });
+
+});
+
 describe("Modificar assistència: ",() => {
 
     it("Retorna status 201 quan es modifica una assistència", (done) => {
