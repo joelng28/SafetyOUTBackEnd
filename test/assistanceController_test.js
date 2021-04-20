@@ -64,11 +64,11 @@ describe("Donar d'alta una nova assistència: ",() => {
     });
 });
 
-describe("Consultar assistències: ",() => {
+describe("Consultar assistències futures: ",() => {
 
     it("Retorna status 201 quan l'usuari existeix i té alguna asistència", (done) => {
         chai.request(url)
-        .get('/assistance/consult')
+        .get('/assistance/consultFuture')
         .send({
             user_id: "604ca4f3482d773168499269",
         })
@@ -80,7 +80,7 @@ describe("Consultar assistències: ",() => {
 
     it("Retorna status 409 quan s'intenta consultar un usuari que no existeix", (done) => {
         chai.request(url)
-        .get('/assistance/consult')
+        .get('/assistance/consultFuture')
         .send({
             user_id: "604ca4f3482d773168499869",
         })
@@ -92,9 +92,52 @@ describe("Consultar assistències: ",() => {
 
     it("Retorna status 400 quan s'intenta consultar un usuari sense assistències futures", (done) => {
         chai.request(url)
-        .get('/assistance/consult')
+        .get('/assistance/consultFuture')
         .send({
             user_id: "604cb1aa228a8c10a42ce241",
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(400);
+            done();
+        });
+    });
+
+});
+
+describe("Consultar assistències en una data: ",() => {
+
+    it("Retorna status 201 quan l'usuari existeix i té alguna asistència en la data donada", (done) => {
+        chai.request(url)
+        .get('/assistance/consultOnDate')
+        .send({
+            user_id: "604ca4f3482d773168499269",
+            dateTime: "15:00"
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(201);
+            done();
+        });
+    });
+
+    it("Retorna status 409 quan s'intenta consultar un usuari que no existeix", (done) => {
+        chai.request(url)
+        .get('/assistance/consultOnDate')
+        .send({
+            user_id: "604ca4f3482d773168499869",
+            dateTime: "15:00"
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(409);
+            done();
+        });
+    });
+
+    it("Retorna status 400 quan s'intenta consultar un usuari sense assistències en la data indicada", (done) => {
+        chai.request(url)
+        .get('/assistance/consultOnDate')
+        .send({
+            user_id: "604cb1aa228a8c10a42ce241",
+            dateTime: "00:00"
         })
         .end(function(err, res){
             expect(res).to.have.status(400);
