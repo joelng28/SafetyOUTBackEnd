@@ -72,6 +72,34 @@ exports.postAssistance = (req, res, next) => {
     })
 };
 
+exports.modifyAssistance = (req,res,next) => {
+    const userId = req.body.user_id;
+    const place = req.body.place;
+    const num_hours_new= req.body.num_hours;
+    const dateTime_new=req.body.dateTime;
+
+    const filter = {user_id: Mongoose.Types.ObjectId(userId), place: {longitude: place.longitude, latitude: place.latitude}};
+    const update = { 
+        num_hours: num_hours_new,
+        dateTime: dateTime_new
+    };
+    Assistance.findOneAndUpdate(filter,update)
+    .then(assistance => {
+        if(!assistance){
+            res.status(404).json({message:"An assistance in this place with this user could not be found"});
+            const error = new Error();
+            error.statusCode = 404;
+            throw error;
+        }
+        res.status(201).json({message:"Modified correctly"});
+    })
+    .catch(err=>{
+        if(!err.statusCode){
+          err.statusCode = 500;
+     }
+        next(err);
+    });
+}
 
 exports.deleteAssistance = (req, res, next) => {
 

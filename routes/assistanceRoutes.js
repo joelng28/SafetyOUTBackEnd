@@ -4,7 +4,8 @@ const { body } = require('express-validator');
 const assistanceController = require('../controllers/assistanceController');
 const router = express.Router();
 
-router.post('/', assistanceController.postAssistance);
+router.post('/add', assistanceController.postAssistance);
+router.post('/modify', assistanceController.modifyAssistance);
 router.delete('/', assistanceController.deleteAssistance);
 
 
