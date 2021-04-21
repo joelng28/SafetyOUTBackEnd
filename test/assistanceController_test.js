@@ -17,11 +17,25 @@ describe("Donar d'alta una nova assistència: ",() => {
         .send({
             user_id: "604ca4f3482d773168499269",
             place: {
-                longitude:"59",
-                latitude:"13"
+                longitude:"100",
+                latitude:"200"
             },
-            dateTime: "15:00",
-            num_hours:2
+            dateInterval:{
+                startDate: {
+                    year:"2000",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+                },
+                endDate: {
+                    year:"2000",
+                    month:"9",
+                    day:"14",
+                    hour:"19",
+                    minute:"0",
+                }
+            }
         })
         .end(function(err, res){
             expect(res).to.have.status(201);
@@ -32,13 +46,27 @@ describe("Donar d'alta una nova assistència: ",() => {
         chai.request(url)
         .post('/assistance')
         .send({
-            user_id: "604ca4f3482d773168499869",
+            user_id: "604ca4f3482d773968499269",
             place: {
-                longitude:"59",
-                latitude:"13"
+                longitude:"100",
+                latitude:"200"
             },
-            dateTime: "15:00",
-            num_hours:2
+            dateInterval:{
+                startDate: {
+                    year:"2000",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+                },
+                endDate: {
+                    year:"2000",
+                    month:"9",
+                    day:"14",
+                    hour:"19",
+                    minute:"0",
+                }
+            }
         })
         .end(function(err, res){
             expect(res).to.have.status(409);
@@ -51,11 +79,25 @@ describe("Donar d'alta una nova assistència: ",() => {
         .send({
             user_id: "604ca4f3482d773168499269",
             place: {
-                longitude:"59",
-                latitude:"13"
+                longitude:"100",
+                latitude:"200"
             },
-            dateTime: "15:00",
-            num_hours:2
+            dateInterval:{
+                startDate: {
+                    year:"2000",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+                },
+                endDate: {
+                    year:"2000",
+                    month:"9",
+                    day:"14",
+                    hour:"19",
+                    minute:"0",
+                }
+            }
         })
         .end(function(err, res){
             expect(res).to.have.status(409);
@@ -72,8 +114,17 @@ describe("Eliminar una assistència existent: ",() => {
         .send({
             user_id: "604ca4f3482d773168499269",
             place: {
-                longitude:"59",
-                latitude:"13"
+                longitude:"100",
+                latitude:"200"
+            },
+            dateInterval:{
+                startDate: {
+                    year:"2000",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+                }
             }
         })
         .end(function(err, res){
@@ -87,8 +138,17 @@ describe("Eliminar una assistència existent: ",() => {
         .send({
             user_id: "604ca4f3482d773168499269",
             place: {
-                longitude:"59",
-                latitude:"13"
+                longitude:"100",
+                latitude:"200"
+            },
+            dateInterval:{
+                startDate: {
+                    year:"1984",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+                }
             }
         })
         .end(function(err, res){

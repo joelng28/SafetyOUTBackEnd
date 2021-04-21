@@ -8,14 +8,29 @@ exports.postAssistance = (req, res, next) => {
     const user_id = req.body.user_id;
     const latitude = req.body.place.latitude;
     const longitude = req.body.place.longitude;
-    const startDate = req.body.dateInterval.startDate;
-    const endDate = req.body.dateInterval.endDate;
+    const startDateJSON = req.body.dateInterval.startDate;
+    const endDateJSON = req.body.dateInterval.endDate;
 
+
+    const startDate = new Date(
+        startDateJSON.year,
+        startDateJSON.month,
+        startDateJSON.day,
+        startDateJSON.hour,
+        startDateJSON.minute,
+        "0"
+    );
 
     User.findById(user_id)
     .then(user => {
         if(user){
-            Assistance.findOne({user_id: Mongoose.Types.ObjectId(user_id), place: {longitude: longitude, latitude: latitude}})
+            Assistance.findOne({
+                $and: [
+                    {"user_id": Mongoose.Types.ObjectId(user_id)}, 
+                    {"place": {longitude: longitude, latitude: latitude}},
+                    {"dateInterval.startDate": startDate}
+                ]
+            })
             .then(assistanceFound => {
               
                 if(assistanceFound){
@@ -29,8 +44,8 @@ exports.postAssistance = (req, res, next) => {
                     user_id: Mongoose.Types.ObjectId(user_id),
                     place: req.body.place,
                     dateInterval:{
-                        startDate: new Date(startDate.year, startDate.month, startDate.day, startDate.hour, startDate.minute, 0),
-                        endDate: new Date(endDate.year, endDate.month, endDate.day, endDate.hour, endDate.minute, 0)
+                        startDate: new Date(startDateJSON.year, startDateJSON.month, startDateJSON.day, startDateJSON.hour, startDateJSON.minute, 0),
+                        endDate: new Date(endDateJSON.year, endDateJSON.month, endDateJSON.day, endDateJSON.hour, endDateJSON.minute, 0)
                     }
                 });
 
@@ -62,11 +77,26 @@ exports.deleteAssistance = (req, res, next) => {
 
     const userId = req.body.user_id;
     const place = req.body.place;
+    const startDateJSON = req.body.dateInterval.startDate;
 
-    Assistance.findOne({user_id: Mongoose.Types.ObjectId(userId), place: {longitude: place.longitude, latitude: place.latitude}})
+    const startDate = new Date(
+        startDateJSON.year,
+        startDateJSON.month,
+        startDateJSON.day,
+        startDateJSON.hour,
+        startDateJSON.minute,
+        "0"
+    );
+    Assistance.findOne({
+        $and: [
+            {"user_id": Mongoose.Types.ObjectId(userId)}, 
+            {"place": {longitude: place.longitude, latitude: place.latitude}},
+            {"dateInterval.startDate": startDate}
+        ]
+        })
         .then(assistance => {
             if(!assistance){
-                res.status(404).json({message:"An assistance in this place with this user could not be found"});
+                res.status(404).json({message:"An assistance in this place at this time with this user could not be found"});
                 const error = new Error();
                 error.statusCode = 404;
                 throw error;
