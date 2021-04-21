@@ -21,10 +21,10 @@ app.use((req, res, next) => {
   
   const userRoutes = require('./routes/userRoutes');
   const assistanceRoutes = require('./routes/assistanceRoutes');
-
+  const placeController = require('./routes/placeRoutes');
   app.use('/user', userRoutes);
   app.use('/assistance', assistanceRoutes);
-
+  app.use('/place', placeController);
   mongoose
   .connect(
     'mongodb+srv://' + process.env.MONGO_DB_USER + ':' + process.env.MONGO_DB_PASSWORD + '@safetyout.pvtcw.mongodb.net/SafetyOut?retryWrites=true&w=majority',

@@ -8,7 +8,8 @@ exports.postAssistance = (req, res, next) => {
     const user_id = req.body.user_id;
     const latitude = req.body.place.latitude;
     const longitude = req.body.place.longitude;
-    const dateTime = req.body.dateTime;
+    const startDate = req.body.dateInterval.startDate;
+    const endDate = req.body.dateInterval.endDate;
 
 
     User.findById(user_id)
@@ -27,8 +28,10 @@ exports.postAssistance = (req, res, next) => {
                 const assistance = new Assistance({
                     user_id: Mongoose.Types.ObjectId(user_id),
                     place: req.body.place,
-                    dateTime: dateTime,
-                    num_hours: req.body.num_hours
+                    dateInterval:{
+                        startDate: new Date(startDate.year, startDate.month, startDate.day, startDate.hour, startDate.minute, 0),
+                        endDate: new Date(endDate.year, endDate.month, endDate.day, endDate.hour, endDate.minute, 0)
+                    }
                 });
 
                 assistance.save()
