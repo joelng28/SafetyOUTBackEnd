@@ -25,5 +25,11 @@ exports.getOccupation = (req, res, next) => {
         ],
       }).then((assistances) => {
         res.status(200).json({occupation: assistances.length});
-      });
+      })
+      .catch(err=>{
+        if(!err.statusCode){
+          err.statusCode = 500;
+     }
+        next(err);
+    });
 }
