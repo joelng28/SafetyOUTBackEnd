@@ -22,15 +22,15 @@ describe("Donar d'alta una nova assistència: ",() => {
             },
             dateInterval:{
                 startDate: {
-                    year:"2000",
+                    year:"2070",
                     month:"9",
                     day:"14",
                     hour:"15",
                     minute:"0",
                 },
                 endDate: {
-                    year:"2000",
-                    month:"9",
+                    year:"2070",
+                    month:"10",
                     day:"14",
                     hour:"19",
                     minute:"0",
@@ -84,7 +84,66 @@ describe("Donar d'alta una nova assistència: ",() => {
             },
             dateInterval:{
                 startDate: {
+                    year:"2070",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+                },
+                endDate: {
                     year:"2000",
+                    month:"10",
+                    day:"14",
+                    hour:"19",
+                    minute:"0",
+                }
+            }
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(409);
+            done();
+        });
+    });
+});
+
+describe("Consultar assistències futures: ",() => {
+
+    it("Retorna status 200 quan l'usuari existeix i té alguna asistència futura", (done) => {
+        chai.request(url)
+        .get('/assistance/consultFuture')
+        .send({
+            user_id: "604ca4f3482d773168499269",
+            dateInterval:{
+                startDate: {
+                    year:"1999",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+                },
+                endDate: {
+                    year:"2000",
+                    month:"9",
+                    day:"14",
+                    hour:"19",
+                    minute:"0",
+                }
+            }
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(200);
+            done();
+        });
+    });
+
+    it("Retorna status 409 quan s'intenta consultar un usuari que no existeix", (done) => {
+        chai.request(url)
+        .get('/assistance/consultFuture')
+        .send({
+            user_id: "604ca4f3482d773168499869",
+            dateInterval:{
+                startDate: {
+                    year:"1999",
                     month:"9",
                     day:"14",
                     hour:"15",
@@ -104,59 +163,55 @@ describe("Donar d'alta una nova assistència: ",() => {
             done();
         });
     });
-});
 
-describe("Consultar assistències futures: ",() => {
-
-    it("Retorna status 201 quan l'usuari existeix i té alguna asistència", (done) => {
-        chai.request(url)
-        .get('/assistance/consultFuture')
-        .send({
-            user_id: "604ca4f3482d773168499269",
-        })
-        .end(function(err, res){
-            expect(res).to.have.status(201);
-            done();
-        });
-    });
-
-    it("Retorna status 409 quan s'intenta consultar un usuari que no existeix", (done) => {
-        chai.request(url)
-        .get('/assistance/consultFuture')
-        .send({
-            user_id: "604ca4f3482d773168499869",
-        })
-        .end(function(err, res){
-            expect(res).to.have.status(409);
-            done();
-        });
-    });
-
-    it("Retorna status 400 quan s'intenta consultar un usuari sense assistències futures", (done) => {
+    it("Retorna status 200 quan s'intenta consultar un usuari sense assistències futures", (done) => {
         chai.request(url)
         .get('/assistance/consultFuture')
         .send({
             user_id: "604cb1aa228a8c10a42ce241",
+            dateInterval:{
+                startDate: {
+                    year:"1999",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+                },
+                endDate: {
+                    year:"2000",
+                    month:"9",
+                    day:"14",
+                    hour:"19",
+                    minute:"0",
+                }
+            }
         })
         .end(function(err, res){
-            expect(res).to.have.status(400);
+            expect(res).to.have.status(200);
             done();
         });
     });
 
 });
+
 
 describe("Consultar assistències en una data: ",() => {
 
-    it("Retorna status 201 quan l'usuari existeix i té alguna asistència en la data donada", (done) => {
+    it("Retorna status 200 quan l'usuari existeix i té alguna asistència en la data donada", (done) => {
         chai.request(url)
         .get('/assistance/consultOnDate')
         .send({
             user_id: "604ca4f3482d773168499269",
-            dateTime: "15:00"
+            startDate: {
+                year:"2070",
+                month:"9",
+                day:"14",
+                hour:"15",
+                minute:"0",
+            }
         })
         .end(function(err, res){
-            expect(res).to.have.status(201);
+            expect(res).to.have.status(200);
             done();
         });
     });
@@ -166,7 +221,13 @@ describe("Consultar assistències en una data: ",() => {
         .get('/assistance/consultOnDate')
         .send({
             user_id: "604ca4f3482d773168499869",
-            dateTime: "15:00"
+            startDate: {
+                    year:"2000",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+            }
         })
         .end(function(err, res){
             expect(res).to.have.status(409);
@@ -174,15 +235,21 @@ describe("Consultar assistències en una data: ",() => {
         });
     });
 
-    it("Retorna status 400 quan s'intenta consultar un usuari sense assistències en la data indicada", (done) => {
+    it("Retorna status 200 quan s'intenta consultar un usuari sense assistències en la data indicada", (done) => {
         chai.request(url)
         .get('/assistance/consultOnDate')
         .send({
             user_id: "604cb1aa228a8c10a42ce241",
-            dateTime: "00:00"
+            startDate: {
+                    year:"1900",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+            }
         })
         .end(function(err, res){
-            expect(res).to.have.status(400);
+            expect(res).to.have.status(200);
             done();
         });
     });
@@ -196,18 +263,42 @@ describe("Modificar assistència: ",() => {
         .post('/assistance/modify')
         .send({
             user_id: "604ca4f3482d773168499269",
-            place: {
-                longitude:"59",
-                latitude:"13"
-            },
-            dateTime: "16:00",
-            num_hours:3
+    place: {
+        "longitude":"100",
+        "latitude":"200"
+    },
+    dateInterval: {
+        startDate: {
+            "day":  "14",
+            "month":  "9",
+            "year":  "2070",
+            "hour":  "15",
+            "minute": "0" 
+
+        }
+    },
+    newStartDate:{
+        "year": "1999",
+        "month": "10",
+        "day": "13",
+        "hour": "15",
+        "minute":"0"
+    },
+    newEndDate:{
+        "year": "2999",
+        "month": "10",
+        "day": "13",
+        "hour": "15",
+        "minute":"0"
+    }
+
         })
         .end(function(err, res){
             expect(res).to.have.status(201);
             done();
         });
     });
+
     it("Retorna status 404 quan s'intenta modificar una assistència que no existeix", (done) => {
         chai.request(url)
         .post('/assistance/modify')
@@ -216,6 +307,29 @@ describe("Modificar assistència: ",() => {
             place: {
                 longitude:"59",
                 latitude:"14"
+            },
+            dateInterval:{
+                startDate: {
+                    year:"2070",
+                    month:"9",
+                    day:"14",
+                    hour:"15",
+                    minute:"0",
+                },
+            },
+            newStartDate:{
+                year:"2070",
+                month:"10",
+                day:"14",
+                hour:"15",
+                minute:"0",
+            },
+            newEndDate:{
+                year:"2070",
+                month:"11",
+                day:"14",
+                hour:"15",
+                minute:"0",
             }
         })
         .end(function(err, res){
@@ -224,6 +338,7 @@ describe("Modificar assistència: ",() => {
         });
     });
 });
+
 
 describe("Eliminar una assistència existent: ",() => {
 
@@ -238,7 +353,7 @@ describe("Eliminar una assistència existent: ",() => {
             },
             dateInterval:{
                 startDate: {
-                    year:"2000",
+                    year:"2070",
                     month:"9",
                     day:"14",
                     hour:"15",
