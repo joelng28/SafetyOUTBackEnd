@@ -353,11 +353,11 @@ describe("Eliminar una assistència existent: ",() => {
             },
             dateInterval:{
                 startDate: {
-                    year:"2070",
-                    month:"9",
-                    day:"14",
-                    hour:"15",
-                    minute:"0",
+                    "year": "1999",
+                    "month": "10",
+                    "day": "13",
+                    "hour": "15",
+                    "minute":"0"
                 }
             }
         })

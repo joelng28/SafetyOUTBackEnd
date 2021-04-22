@@ -129,7 +129,7 @@ exports.consultAssistanceOnDate = (req,res,next) => {
                 ]
             })
             .then(currentAssistances => {
-                res.status(201).json({message:currentAssistances});
+                res.status(200).json({message:currentAssistances});
             })
             .catch(err=>{
                 if(!err.statusCode){
@@ -191,9 +191,9 @@ exports.deleteAssistance = (req, res, next) => {
     const startDate = parseDate(startDateJSON);
     
     Assistance.findOne({
-        $and: [
-            {"user_id": Mongoose.Types.ObjectId(userId)}, 
-            {"place": {longitude: place.longitude, latitude: place.latitude}},
+        $and:[
+            {user_id: Mongoose.Types.ObjectId(userId)},
+            {place: {longitude: place.longitude, latitude: place.latitude}},
             {"dateInterval.startDate": startDate}
         ]
         })
