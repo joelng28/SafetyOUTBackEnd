@@ -3,6 +3,22 @@ const Assistance = require('../models/assistance');
 const  Mongoose  = require('mongoose');
 
 
+
+
+function parseDate(JSONdate) {
+    var date = new Date(
+        JSONdate.year,
+        JSONdate.month,
+        JSONdate.day,
+        JSONdate.hour,
+        JSONdate.minute,
+        "0"
+    );
+    return date;
+}
+
+
+
 exports.postAssistance = (req, res, next) => {
 
     const user_id = req.body.user_id;
@@ -11,15 +27,7 @@ exports.postAssistance = (req, res, next) => {
     const startDateJSON = req.body.dateInterval.startDate;
     const endDateJSON = req.body.dateInterval.endDate;
 
-
-    const startDate = new Date(
-        startDateJSON.year,
-        startDateJSON.month,
-        startDateJSON.day,
-        startDateJSON.hour,
-        startDateJSON.minute,
-        "0"
-    );
+    const startDate = parseDate(startDateJSON);
 
     User.findById(user_id)
     .then(user => {
@@ -75,15 +83,19 @@ exports.postAssistance = (req, res, next) => {
 exports.consultFutureAssistance = (req, res, next) => {
 
     const user_id = req.body.user_id;
-
-  
+    const startDate = new Date();
+    console.log(startDate);
     User.findById(user_id)
     .then(user => {
         if(user){
-            Assistance.find({user_id: Mongoose.Types.ObjectId(user_id)})
+            Assistance.find({
+                $and: [
+                    {user_id: Mongoose.Types.ObjectId(user_id)},
+                    {"dateInterval.startDate": {$gte : startDate}}
+                ]
+            })
             .then(currentAssistances => {
-                if(currentAssistances.length==0) res.status(400).json({message:"The user has no future assistances"});
-                res.status(201).json({message:currentAssistances});
+                res.status(200).json({message:currentAssistances});
             })
             .catch(err=>{
                 if(!err.statusCode){
@@ -100,14 +112,23 @@ exports.consultFutureAssistance = (req, res, next) => {
 exports.consultAssistanceOnDate = (req,res,next) => {
     
     const user_id = req.body.user_id;
-    const dateTime = req.body.dateTime;
+    const startDateJSON = req.body.startDate;
+
+    const startDate = new Date(startDateJSON.year, startDateJSON.month, startDateJSON.day)
+    const endDate = new Date(startDateJSON.year, startDateJSON.month, startDateJSON.day);
+    endDate.setDate(endDate.getDate() + 1);
 
     User.findById(user_id)
     .then(user => {
         if(user){
-            Assistance.find({user_id: Mongoose.Types.ObjectId(user_id),dateTime: dateTime})
+            Assistance.find({
+                $and:[
+                    {user_id: Mongoose.Types.ObjectId(user_id)},
+                    {"dateInterval.startDate": {$gte:startDate}},
+                    {"dateInterval.startDate": {$lte:endDate}}
+                ]
+            })
             .then(currentAssistances => {
-                if(currentAssistances.length==0) res.status(400).json({message:"The user has no assistances on this date"});
                 res.status(201).json({message:currentAssistances});
             })
             .catch(err=>{
@@ -125,13 +146,23 @@ exports.consultAssistanceOnDate = (req,res,next) => {
 exports.modifyAssistance = (req,res,next) => {
     const userId = req.body.user_id;
     const place = req.body.place;
-    const num_hours_new= req.body.num_hours;
-    const dateTime_new=req.body.dateTime;
+    const startDateJSON = req.body.dateInterval.startDate;
 
-    const filter = {user_id: Mongoose.Types.ObjectId(userId), place: {longitude: place.longitude, latitude: place.latitude}};
+    const newStartDateJSON = req.body.newStartDate;
+    const newEndDateJSON = req.body.newEndDate;
+
+    const startDate = parseDate(startDateJSON);
+
+    const filter = {
+        $and:[
+            {user_id: Mongoose.Types.ObjectId(userId)},
+            {place: {longitude: place.longitude, latitude: place.latitude}},
+            {"dateInterval.startDate": startDate}
+        ]
+    };
     const update = { 
-        num_hours: num_hours_new,
-        dateTime: dateTime_new
+        "dateInterval.startDate": parseDate(newStartDateJSON),
+        "dateInterval.endDate": parseDate(newEndDateJSON)
     };
     Assistance.findOneAndUpdate(filter,update)
     .then(assistance => {
@@ -157,14 +188,8 @@ exports.deleteAssistance = (req, res, next) => {
     const place = req.body.place;
     const startDateJSON = req.body.dateInterval.startDate;
 
-    const startDate = new Date(
-        startDateJSON.year,
-        startDateJSON.month,
-        startDateJSON.day,
-        startDateJSON.hour,
-        startDateJSON.minute,
-        "0"
-    );
+    const startDate = parseDate(startDateJSON);
+    
     Assistance.findOne({
         $and: [
             {"user_id": Mongoose.Types.ObjectId(userId)}, 
