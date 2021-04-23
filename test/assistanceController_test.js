@@ -6,7 +6,7 @@ const expect = require("chai").expect;
 chai.use(chaiHttp);
 const localhost_url = "http://localhost:8080";
 const heroku_url = "https://safetyout.herokuapp.com"
-const url = localhost_url;
+const url = heroku_url;
 
 
 describe("Donar d'alta una nova assistència: ",() => {
@@ -113,22 +113,6 @@ describe("Consultar assistències futures: ",() => {
         .get('/assistance/consultFuture')
         .send({
             user_id: "604ca4f3482d773168499269",
-            dateInterval:{
-                startDate: {
-                    year:"1999",
-                    month:"9",
-                    day:"14",
-                    hour:"15",
-                    minute:"0",
-                },
-                endDate: {
-                    year:"2000",
-                    month:"9",
-                    day:"14",
-                    hour:"19",
-                    minute:"0",
-                }
-            }
         })
         .end(function(err, res){
             expect(res).to.have.status(200);
@@ -141,22 +125,6 @@ describe("Consultar assistències futures: ",() => {
         .get('/assistance/consultFuture')
         .send({
             user_id: "604ca4f3482d773168499869",
-            dateInterval:{
-                startDate: {
-                    year:"1999",
-                    month:"9",
-                    day:"14",
-                    hour:"15",
-                    minute:"0",
-                },
-                endDate: {
-                    year:"2000",
-                    month:"9",
-                    day:"14",
-                    hour:"19",
-                    minute:"0",
-                }
-            }
         })
         .end(function(err, res){
             expect(res).to.have.status(409);
@@ -169,22 +137,6 @@ describe("Consultar assistències futures: ",() => {
         .get('/assistance/consultFuture')
         .send({
             user_id: "604cb1aa228a8c10a42ce241",
-            dateInterval:{
-                startDate: {
-                    year:"1999",
-                    month:"9",
-                    day:"14",
-                    hour:"15",
-                    minute:"0",
-                },
-                endDate: {
-                    year:"2000",
-                    month:"9",
-                    day:"14",
-                    hour:"19",
-                    minute:"0",
-                }
-            }
         })
         .end(function(err, res){
             expect(res).to.have.status(200);
