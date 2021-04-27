@@ -4,11 +4,11 @@ const { body } = require('express-validator');
 const assistanceController = require('../controllers/assistanceController');
 const router = express.Router();
 
-router.get('/consultFuture',assistanceController.consultFutureAssistance);
-router.get('/consultOnDate',assistanceController.consultAssistanceOnDate);
+router.post('/consultFuture',assistanceController.consultFutureAssistance);
+router.post('/consultOnDate',assistanceController.consultAssistanceOnDate);
 router.post('/add', assistanceController.postAssistance);
 router.post('/modify', assistanceController.modifyAssistance);
-router.delete('/', assistanceController.deleteAssistance);
+router.post('/', assistanceController.deleteAssistance);
 
 
 module.exports = router;
