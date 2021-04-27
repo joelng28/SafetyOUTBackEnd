@@ -4,7 +4,7 @@ const { body } = require('express-validator');
 const placeController = require('../controllers/placeController');
 const router = express.Router();
 
-router.post('/occupation', placeController.getOccupation);
+router.get('/occupation', placeController.getOccupation);
 
 
 
