@@ -133,4 +133,30 @@ exports.getUserInfo = (req, res, next) => {
         });       
 }
 
+exports.acceptFriendRequest = (req, res, next) => {
+
+    let loadedUser;
+
+    User.findById(req.params.userId) 
+        .then(user => {
+            if(!user){
+                res.status(404).json({message: "We can't accept this friend request"});
+                const error = new Error("We can't accept this friend request");
+                error.statusCode = 404;
+                throw error;
+            }
+            else{
+                loadedUser = user;
+                console.log("Accepted");
+                res.status(200).json({user:loadedUser});
+            }
+        })
+        .catch(err => {
+            if(!err.statusCode)err.statusCode=500;
+            next(err);
+        });       
+
+
+}
+
 

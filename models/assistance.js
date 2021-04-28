@@ -14,10 +14,14 @@ const assistanceSchema = new Schema(
                 type:String
             }
         },
-        dateInterval:{
-            startDate: Date,
-            endDate: Date
-        }       
+        dateTime:{
+            type:String,
+            required:true
+        },
+        num_hours:{
+            type:Number,
+            required: true
+        },        
     },
     {timestamps:true}
 );
