@@ -82,7 +82,7 @@ exports.postAssistance = (req, res, next) => {
 
 exports.consultFutureAssistance = (req, res, next) => {
 
-    const user_id = req.body.user_id;
+    const user_id = req.query.user_id;
     const startDate = new Date();
     console.log(startDate);
     User.findById(user_id)
@@ -111,11 +111,13 @@ exports.consultFutureAssistance = (req, res, next) => {
 
 exports.consultAssistanceOnDate = (req,res,next) => {
     
-    const user_id = req.body.user_id;
-    const startDateJSON = req.body.startDate;
+    const user_id = req.query.user_id;
+    const year = req.query.year;
+    const day = req.query.day;
+    const month = req.query.month;
 
-    const startDate = new Date(startDateJSON.year, startDateJSON.month, startDateJSON.day)
-    const endDate = new Date(startDateJSON.year, startDateJSON.month, startDateJSON.day);
+    const startDate = new Date(year, month, day)
+    const endDate = new Date(year, month, day);
     endDate.setDate(endDate.getDate() + 1);
 
     User.findById(user_id)
