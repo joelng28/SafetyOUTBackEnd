@@ -10,4 +10,5 @@ router.get('/getUserInfo/:userId', userController.getUserInfo);
 router.get('/checkEmail/:email', userController.checkEmail);
 router.post('/acceptFriendRequest/:userId', userController.acceptFriendRequest)
 
+
 module.exports = router;
