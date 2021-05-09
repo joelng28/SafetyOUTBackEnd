@@ -26,11 +26,13 @@ app.use((req, res, next) => {
   const assistanceRoutes = require('./routes/assistanceRoutes');
   const placeRoutes = require('./routes/placeRoutes');
   const chatRoutes = require('./routes/chatRoutes');
+  const bubbleInvitationRoutes = require('./routes/bubbleInvitationRoutes');
 
   app.use('/user', userRoutes);
   app.use('/assistance', assistanceRoutes);
   app.use('/place', placeRoutes);
   app.use('/chat', chatRoutes);
+  app.use('/bubbleInvitation', bubbleInvitationRoutes);
   mongoose
   .connect(
     'mongodb+srv://' + process.env.MONGO_DB_USER + ':' + process.env.MONGO_DB_PASSWORD + '@safetyout.pvtcw.mongodb.net/SafetyOut?retryWrites=true&w=majority',

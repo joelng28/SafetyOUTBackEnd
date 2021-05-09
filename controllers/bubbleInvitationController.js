@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const BubbleInvitation = require('../models/bubbleInvitation');
+const Bubble = require('../models/bubble');
 const  Mongoose  = require('mongoose');
 
 exports.postInvitation = (req, res, next) => {
