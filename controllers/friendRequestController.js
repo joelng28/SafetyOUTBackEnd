@@ -1,5 +1,7 @@
 const User = require('../models/user');
 const FriendRequest = require('../models/friendRequest');
+const Friends = require('../models/friends');
+const  Mongoose  = require('mongoose');
 const  Mongoose  = require('mongoose');
 
 exports.postFriendRequest = (req, res, next) => {
@@ -51,24 +53,72 @@ exports.postFriendRequest = (req, res, next) => {
 
 exports.acceptFriendRequest = (req, res, next) => {
 
-    let loadedUser;
+    const user_id_request = req.body.user_id_request;
+    const user_id_requested = req.body.user_id_requested;
 
-    User.findById(req.params.userId) 
-        .then(user => {
-            if(!user){
-                res.status(404).json({message: "We can't accept this friend request"});
-                const error = new Error("We can't accept this friend request");
+    FriendRequest.findOne({
+        $and:[
+        {user_id_request: Mongoose.Types.ObjectId(user_id)},
+        {user_id_requested: Mongoose.Types.ObjectId(user_id)}
+        ]
+    })
+
+    .then(FriendRequest => {
+        if (!FriendRequest) {
+                res.status(404).json({message:"A friend request between this two users does not exist"});
+                const error = new Error();
                 error.statusCode = 404;
                 throw error;
-            }
-            else{
-                loadedUser = user;
-                console.log("Accepted");
-                res.status(200).json({user:loadedUser});
-            }
+        }
+        FriendRequest.remove()
+            .then(result => {
+                //Model amistad? quantitat amics..
+                Friends.findOne({_id: Mongoose.Types.ObjectId(user_id)})
+                        .then(Friends => {
+                            if(Friends) {
+                                Friends.friends.push({userId:user_id});
+                                Friends.update()
+                                    .then(result => {
+                                        res.status(200).json({message:"User added to friends"});
+                                    })
+                                    .catch(err=>{
+                                        if(!err.statusCode){
+                                          err.statusCode = 500;
+                                     }
+                                        next(err);
+                                    });
+                            }
+                            else {
+                                res.status(200).json({message:"This user does not exist"});
+                            }
+                        })
+                        .catch(err=>{
+                            if(!err.statusCode){
+                              err.statusCode = 500;
+                         }
+                            next(err);
+                        });
+                     
+                })
+                .catch(err=>{
+                    if(!err.statusCode){
+                      err.statusCode = 500;
+                 }
+                    next(err);
+                });
         })
-        .catch(err => {
-            if(!err.statusCode)err.statusCode=500;
+        .catch(err=>{
+            if(!err.statusCode){
+              err.statusCode = 500;
+         }
             next(err);
-        });       
+        });
+}
+
+exports.denyFriendRequest = (req, res, next) => {
+    
+}
+
+exports.getFriendRequest = (req, res, next) => {
+    
 }
