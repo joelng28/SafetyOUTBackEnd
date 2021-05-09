@@ -6,6 +6,11 @@ const  Mongoose  = require('mongoose');
 exports.handleConnection = (socket) => {
   
     console.log("A user has connected");
+
+    io.sockets.on('connect', function(){
+        console.log("A socket with id " + socket.id + " has connected");
+    })
+
     socket.on('join', (user1_id, user2_id) => {
         Chat.findOne({
             $or:[
