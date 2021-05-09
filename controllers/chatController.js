@@ -5,6 +5,7 @@ const  Mongoose  = require('mongoose');
 
 exports.handleConnection = (socket) => {
   
+    console.log("A user has connected");
     socket.on('join', (user1_id, user2_id) => {
         Chat.findOne({
             $or:[
