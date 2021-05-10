@@ -7,6 +7,10 @@ const bubbleSchema = new Schema(
             type: String,
             required:true
         },
+        admin:{
+            type: Schema.ObjectId,
+            required:true
+        },
         members:[
             {userId: Schema.ObjectId}
         ]
