@@ -6,7 +6,7 @@ const expect = require("chai").expect;
 chai.use(chaiHttp);
 const localhost_url = "http://localhost:8080";
 const heroku_url = "https://safetyout.herokuapp.com"
-const url = heroku_url;
+const url = localhost_url;
 
 
 describe("Donar d'alta una nova assistència: ",() => {
