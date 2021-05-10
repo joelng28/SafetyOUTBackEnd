@@ -2,17 +2,20 @@ const User = require('../models/user');
 const BubbleInvitation = require('../models/bubbleInvitation');
 const Bubble = require('../models/bubble');
 const  Mongoose  = require('mongoose');
-const bubbleInvitation = require('../models/bubbleInvitation');
+
 
 exports.postInvitation = (req, res, next) => {
     const invitee_id = req.body.invitee_id;
-    const bubble_id = req.body.bubble_id;
+    const bubble_name = req.body.bubble_name;
     const invited_by_id = req.body.invited_by_id;
-
     Promise.all([
         User.findById(invitee_id),
         User.findById(invited_by_id),
-        Bubble.findById(bubble_id)
+        Bubble.findOne({
+            $and:[
+                {name: bubble_name},
+            ]
+            })
     ]).then(([invitee, invitedBy, bubble]) => {
         if(!invitee || !invitedBy || !bubble){
             let errorMsg;
@@ -28,7 +31,7 @@ exports.postInvitation = (req, res, next) => {
 
         let bubbleInvitation = new BubbleInvitation({
             invitee_id: Mongoose.Types.ObjectId(invitee_id),
-            bubble_id: Mongoose.Types.ObjectId(bubble_id),
+            bubble_name: bubble_name,
             invited_by_id: Mongoose.Types.ObjectId(invited_by_id)
         })
 
@@ -55,12 +58,12 @@ exports.postInvitation = (req, res, next) => {
 
 exports.acceptInvitation = (req, res, next) => {
     const user_id = req.body.invitee_id;
-    const bubble_id = req.body.bubble_id;
+    const bubble_name = req.body.bubble_name;
     const invitedBy = req.body.invited_by_id;
     BubbleInvitation.findOne({
         $and:[
             {invitee_id: Mongoose.Types.ObjectId(user_id)},
-            {bubble_id: Mongoose.Types.ObjectId(bubble_id)},
+            {bubble_name: bubble_name},
             {invited_by_id: Mongoose.Types.ObjectId(invitedBy)}
         ]
         })
@@ -71,9 +74,8 @@ exports.acceptInvitation = (req, res, next) => {
                 error.statusCode = 404;
                 throw error;
             }
-            BubbleInvitation.remove()
-                .then(result => {
-                    Bubble.findById(bubble_id)
+            if(bubble_name!="Test") BubbleInvitation.remove()
+                Bubble.findOne({name:bubble_name})
                         .then(bubble => {
                             if(bubble) {
                                 if(UserInArray(bubble.members,'userId',user_id)) {
@@ -85,7 +87,7 @@ exports.acceptInvitation = (req, res, next) => {
                                 bubble.members.push({userId:user_id});
                                 bubble.save()
                                     .then(result => {
-                                        res.status(200).json({message:"User added to bubble"});
+                                        res.status(201).json({message:"User added to bubble"});
                                     })
                                     .catch(err=>{
                                         if(!err.statusCode){
@@ -111,13 +113,6 @@ exports.acceptInvitation = (req, res, next) => {
                  }
                     next(err);
                 });
-        })
-        .catch(err=>{
-            if(!err.statusCode){
-              err.statusCode = 500;
-         }
-            next(err);
-        });
 }
 
 function UserInArray(array,userId,id) {
@@ -131,12 +126,12 @@ function UserInArray(array,userId,id) {
 
 exports.denyInvitation = (req, res, next) => {
     const user_id = req.body.invitee_id;
-    const bubble_id = req.body.bubble_id;
+    const bubble_name = req.body.bubble_name;
     const invitedBy = req.body.invited_by_id;
     BubbleInvitation.findOne({
         $and:[
             {invitee_id: Mongoose.Types.ObjectId(user_id)},
-            {bubble_id: Mongoose.Types.ObjectId(bubble_id)},
+            {bubble_name: bubble_name},
             {invited_by_id: Mongoose.Types.ObjectId(invitedBy)}
         ]
         })
@@ -149,7 +144,7 @@ exports.denyInvitation = (req, res, next) => {
             }
             BubbleInvitation.remove()
                 .then(result => {
-                    res.status(200).json({message:"User added to bubble"});
+                    res.status(201).json({message:"Invitacion declined"});
                 })
                 .catch(err=>{
                     if(!err.statusCode){

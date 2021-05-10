@@ -1,6 +1,8 @@
 const User = require('../models/user');
 const Bubble = require('../models/bubble');
+const BubbleInvitation = require('../models/bubbleInvitation');
 const  Mongoose  = require('mongoose');
+
 
 
 exports.createBubble = (req, res, next) => {
@@ -17,7 +19,7 @@ exports.createBubble = (req, res, next) => {
                 })
                 .then(bubble => {
                     if(bubble) {
-                        res.status(201).json({message: 'This user already administrates another bubble with this name'});
+                        res.status(404).json({message: 'This user already administrates another bubble with this name'});
                     }
                     else {
                         const newbubble= new Bubble({
@@ -44,7 +46,7 @@ exports.createBubble = (req, res, next) => {
                 
             }
             else{
-                res.status(200).json({message: 'A user with this id does not exist'});
+                res.status(404).json({message: 'A user with this id does not exist'});
             }
         }
     )
@@ -71,13 +73,16 @@ exports.deleteBubble = (req, res, next) => {
                 })
                 .then(bubble => {
                     if(!bubble) {
-                        res.status(201).json({message: 'There is not a bubble with this name administred by this user'});
+                        res.status(404).json({message: 'There is not a bubble with this name administred by this user'});
                     }
                     else {
-                        bubble.delete()
-                        .then(result =>{
+                        //BubbleInvitation.DeleteMany({bubble_name:bubble_name})
+                        //.then(result =>{
+                            bubble.delete()
+                            .then(result =>{
                             res.status(201).json({message: 'Bubble deleted!'});
-                        })
+                            })
+                        //})
                     .catch(err => {
                         if(!err.statusCode){
                             err.statusCode = 500;
@@ -88,7 +93,7 @@ exports.deleteBubble = (req, res, next) => {
                 })
             }
             else{
-                res.status(200).json({message: 'A user with this id does not exist'});
+                res.status(404).json({message: 'A user with this id does not exist'});
             }
         }
     )
