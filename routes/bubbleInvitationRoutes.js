@@ -5,7 +5,7 @@ const bubbleInvitationController = require('../controllers/bubbleInvitationContr
 const router = express.Router();
 
 router.post('/', bubbleInvitationController.postInvitation);
-router.post('/:id/accept', bubbleInvitationController.acceptInvitation);
+router.post('/accept', bubbleInvitationController.acceptInvitation);
 router.post('/:id/deny', bubbleInvitationController.denyInvitation);
 router.get('/:id', bubbleInvitationController.getInvitation);
 
