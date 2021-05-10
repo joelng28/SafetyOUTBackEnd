@@ -6,16 +6,12 @@ const  Mongoose  = require('mongoose');
 
 exports.postInvitation = (req, res, next) => {
     const invitee_id = req.body.invitee_id;
-    const bubble_name = req.body.bubble_name;
+    const bubble_id = req.body.bubble_id;
     const invited_by_id = req.body.invited_by_id;
     Promise.all([
         User.findById(invitee_id),
         User.findById(invited_by_id),
-        Bubble.findOne({
-            $and:[
-                {name: bubble_name},
-            ]
-            })
+        Bubble.findById(bubble_id)
     ]).then(([invitee, invitedBy, bubble]) => {
         if(!invitee || !invitedBy || !bubble){
             let errorMsg;
@@ -31,13 +27,13 @@ exports.postInvitation = (req, res, next) => {
 
         let bubbleInvitation = new BubbleInvitation({
             invitee_id: Mongoose.Types.ObjectId(invitee_id),
-            bubble_name: bubble_name,
+            bubble_id: bubble_id,
             invited_by_id: Mongoose.Types.ObjectId(invited_by_id)
         })
 
         bubbleInvitation.save()
         .then(result => {
-            res.status(201).json({message:"A new bubble invitation record has been added"});
+            res.status(201).json({message:"A new bubble invitation record has been added", invitation_id: bubbleInvitation.id.toString()});
         })
         .catch(err=>{
             if(!err.statusCode){
@@ -57,67 +53,61 @@ exports.postInvitation = (req, res, next) => {
 }
 
 exports.acceptInvitation = (req, res, next) => {
-    const user_id = req.body.invitee_id;
-    const bubble_name = req.body.bubble_name;
-    const invitedBy = req.body.invited_by_id;
-    BubbleInvitation.findOne({
-        $and:[
-            {invitee_id: Mongoose.Types.ObjectId(user_id)},
-            {bubble_name: bubble_name},
-            {invited_by_id: Mongoose.Types.ObjectId(invitedBy)}
-        ]
-        })
-        .then(BubbleInvitation => {
-            if(!BubbleInvitation){
-                res.status(404).json({message:"An invitation for this user to this bubble does not exist"});
-                const error = new Error();
-                error.statusCode = 404;
-                throw error;
-            }
-            if(bubble_name!="Test") BubbleInvitation.remove()
-                Bubble.findOne({name:bubble_name})
-                        .then(bubble => {
-                            if(bubble) {
-                                if(UserInArray(bubble.members,'userId',user_id)) {
-                                    res.status(404).json({message:"This user is already a member of this bubble"});
-                                    const error = new Error();
-                                    error.statusCode = 404;
-                                    throw error;
-                                }
-                                bubble.members.push({userId:user_id});
-                                bubble.save()
-                                    .then(result => {
-                                        res.status(201).json({message:"User added to bubble"});
-                                    })
-                                    .catch(err=>{
-                                        if(!err.statusCode){
-                                          err.statusCode = 500;
-                                     }
-                                        next(err);
-                                    });
-                            }
-                            else {
-                                res.status(200).json({message:"This bubble does no longer exist"});
-                            }
+
+    const invitation_id = req.params.id;
+    console.log(invitation_id);
+    BubbleInvitation.findById(invitation_id)
+    .then(invitation => {
+        if(!invitation){
+            res.status(404).json({message:"An invitation with this id does not exist"});
+            const error = new Error();
+            error.statusCode = 404;
+            throw error;
+        }
+
+        var bubble_id = invitation.bubble_id;
+        var invitee_id = invitation.invitee_id;
+
+        invitation.remove()
+        .then(function(){
+            Bubble.findById(bubble_id)
+            .then(bubble => {
+                if(bubble) {
+                    bubble.members.push({userId:invitee_id});
+                    bubble.save()
+                        .then(result => {
+                            res.status(200).json({message:"User added to bubble"});
                         })
                         .catch(err=>{
                             if(!err.statusCode){
-                              err.statusCode = 500;
-                         }
+                                err.statusCode = 500;
+                            }
                             next(err);
                         });
-                })
-                .catch(err=>{
-                    if(!err.statusCode){
-                      err.statusCode = 500;
-                 }
-                    next(err);
-                });
+                }
+                else {
+                    res.status(404).json({message:"This bubble does no longer exist"});
+                }
+            })
+            .catch(err=>{
+                if(!err.statusCode){
+                    err.statusCode = 500;
+                }
+                next(err);
+            });
+            })  
+        })
+    .catch(err=>{
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });
 }
 
 function UserInArray(array,userId,id) {
     if(array.length>0) {
-        for(i in array) {
+        for(var i in array) {
             if(array[i][userId]==id) return true;
         }
     }
@@ -125,33 +115,26 @@ function UserInArray(array,userId,id) {
 }
 
 exports.denyInvitation = (req, res, next) => {
-    const user_id = req.body.invitee_id;
-    const bubble_name = req.body.bubble_name;
-    const invitedBy = req.body.invited_by_id;
-    BubbleInvitation.findOne({
-        $and:[
-            {invitee_id: Mongoose.Types.ObjectId(user_id)},
-            {bubble_name: bubble_name},
-            {invited_by_id: Mongoose.Types.ObjectId(invitedBy)}
-        ]
-        })
-        .then(BubbleInvitation => {
-            if(!BubbleInvitation){
+    const invitation_id = req.params.id;
+
+    BubbleInvitation.findById(invitation_id)
+        .then(invitation => {
+            if(!invitation){
                 res.status(404).json({message:"An invitation for this user to this bubble does not exist"});
                 const error = new Error();
                 error.statusCode = 404;
                 throw error;
             }
-            BubbleInvitation.remove()
-                .then(result => {
-                    res.status(201).json({message:"Invitacion declined"});
-                })
-                .catch(err=>{
-                    if(!err.statusCode){
-                      err.statusCode = 500;
-                 }
-                    next(err);
-                });
+            invitation.remove()
+            .then(result => {
+                res.status(200).json({message:"Invitacion declined"});
+            })
+            .catch(err=>{
+                if(!err.statusCode){
+                    err.statusCode = 500;
+                }
+                next(err);
+            });
         })
         .catch(err=>{
             if(!err.statusCode){

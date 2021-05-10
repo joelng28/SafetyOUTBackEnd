@@ -7,7 +7,7 @@ const  Mongoose  = require('mongoose');
 
 exports.createBubble = (req, res, next) => {
     const bubble_name = req.body.bubble_name;
-    const user_id=req.body.id;
+    const user_id=req.body.user_id;
     User.findOne({_id: user_id})
     .then(user => {
             if(user){
@@ -19,7 +19,7 @@ exports.createBubble = (req, res, next) => {
                 })
                 .then(bubble => {
                     if(bubble) {
-                        res.status(404).json({message: 'This user already administrates another bubble with this name'});
+                        res.status(409).json({message: 'This user already administrates another bubble with this name'});
                     }
                     else {
                         const newbubble= new Bubble({
@@ -31,7 +31,7 @@ exports.createBubble = (req, res, next) => {
                         })
                         newbubble.save()
                         .then(result =>{
-                         res.status(201).json({message: 'Bubble created!'});
+                         res.status(201).json({message: 'Bubble created!', bubble_id: newbubble._id.toString()});
                         })
                     .catch(err => {
                         if(!err.statusCode){
@@ -41,9 +41,6 @@ exports.createBubble = (req, res, next) => {
                     }); 
                     }
                 })
-              
-
-                
             }
             else{
                 res.status(404).json({message: 'A user with this id does not exist'});
@@ -60,47 +57,27 @@ exports.createBubble = (req, res, next) => {
 
 
 exports.deleteBubble = (req, res, next) => {
-    const bubble_name = req.body.bubble_name;
-    const user_id=req.body.id;
-    User.findOne({_id: user_id})
-    .then(user => {
-            if(user){
-                Bubble.findOne({
-                    $and:[
-                        {admin: user_id},
-                        {name: bubble_name}
-                    ]
-                })
-                .then(bubble => {
-                    if(!bubble) {
-                        res.status(404).json({message: 'There is not a bubble with this name administred by this user'});
-                    }
-                    else {
-                        //BubbleInvitation.DeleteMany({bubble_name:bubble_name})
-                        //.then(result =>{
-                            bubble.delete()
-                            .then(result =>{
-                            res.status(201).json({message: 'Bubble deleted!'});
-                            })
-                        //})
-                    .catch(err => {
-                        if(!err.statusCode){
-                            err.statusCode = 500;
-                        }
-                        next(err);
-                    }); 
-                    }
-                })
-            }
-            else{
-                res.status(404).json({message: 'A user with this id does not exist'});
-            }
+    const bubble_id = req.body.bubble_id;
+    
+    Bubble.findById(bubble_id)
+    .then(bubble => {
+        if(!bubble) {
+            res.status(404).json({message: 'This bubble does not exist'});
         }
-    )
-    .catch(err => {
-        if(!err.statusCode){
-            err.statusCode = 500;
+        else {
+            //BubbleInvitation.DeleteMany({bubble_name:bubble_name})
+            //.then(result =>{
+                bubble.delete()
+                .then(result =>{
+                res.status(200).json({message: 'Bubble deleted!'});
+                })
+            //})
+        .catch(err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
+        }); 
         }
-        next(err);
-    }); 
+    })   
 }
