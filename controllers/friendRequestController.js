@@ -79,8 +79,8 @@ exports.acceptFriendRequest = (req, res, next) => {
                     requested.friends.push({userId: request});
 
                     Promise.all([
-                        request.update(),
-                        requested.update()
+                        request.save(),
+                        requested.save()
                     ]).then(function(){
                         res.status(200).json({message:"User added to friends"});
                     })

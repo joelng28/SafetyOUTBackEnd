@@ -133,4 +133,25 @@ exports.getUserInfo = (req, res, next) => {
         });       
 }
 
+exports.getUserFriends = (req,res, next) => {
+    let loadedUser;
+    User.findById(req.params.userId) 
+        .then(user => {
+            if(!user){
+                res.status(404).json({message: "A user with this id could not be found"});
+                const error = new Error("A user with this id could not be found");
+                error.statusCode = 404;
+                throw error;
+            }
+            else{
+                loadedUser = user;
+                res.status(200).json({message:loadedUser.friends});
+            }
+        })
+        .catch(err => {
+            if(!err.statusCode)err.statusCode=500;
+            next(err);
+        });       
+}
+
 
