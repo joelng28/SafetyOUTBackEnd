@@ -55,7 +55,7 @@ exports.postInvitation = (req, res, next) => {
 exports.acceptInvitation = (req, res, next) => {
 
     const invitation_id = req.params.id;
-    console.log(invitation_id);
+
     BubbleInvitation.findById(invitation_id)
     .then(invitation => {
         if(!invitation){
