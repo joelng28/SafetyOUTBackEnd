@@ -1,5 +1,9 @@
 const User = require('../models/user');
+const Bubble = require('../models/bubble');
+const FriendRequest = require('../models/friendRequest');
+const BubbleInvitation = require('../models/bubbleInvitation');
 const jwt = require("jsonwebtoken");
+
 
 
 exports.checkEmail = (req,res,next) => {
@@ -132,6 +136,52 @@ exports.getUserInfo = (req, res, next) => {
             next(err);
         });       
 }
+
+exports.getUserBubbles = (req, res, next) => {
+
+    var user_id = req.params.id;
+    Bubble.find({"members.userId": user_id})
+    .then(bubbles => {
+        res.status(200).json({bubbles: bubbles});
+    })
+    .catch(err=>{
+        if(!err.statusCode){
+          err.statusCode = 500;
+     }
+        next(err);
+    });
+}
+
+exports.getUserFriendRequests = (req, res, next) => {
+
+    var user_id = req.params.id;
+    FriendRequest.find({user_id_requested: user_id})
+    .then(friendRequests => {
+        res.status(200).json({friendRequests: friendRequests});
+    })
+    .catch(err=>{
+        if(!err.statusCode){
+          err.statusCode = 500;
+     }
+        next(err);
+    });
+}
+
+exports.getUserBubbleInvitations = (req, res, next) => {
+
+    var user_id = req.params.id;
+    BubbleInvitation.find({invitee_id: user_id})
+    .then(bubbleInvitations => {
+        res.status(200).json({bubbleInvitations: bubbleInvitations});
+    })
+    .catch(err=>{
+        if(!err.statusCode){
+          err.statusCode = 500;
+     }
+        next(err);
+    });
+}
+
 /*
 exports.logInGoogle = (req, res, next) => {
 
