@@ -22,7 +22,7 @@ var heroku_url = "https://safetyout.herokuapp.com/"
 var url = heroku_url;
 
 var socket = io.connect(url)
-
+socket.connect();
 socket.emit('join', '604cb1aa228a8c10a42ce241', '604d1f6fd6bf493ec83523ee');
 socket.on('joined', function(chat_id) {
    console.log("You have joined the chat room " + chat_id);

@@ -12,6 +12,9 @@ exports.handleConnection = (socket) => {
     })
 
     socket.on('join', (user1_id, user2_id) => {
+        console.log("This is user1_id: " + user1_id);
+        console.log("This is user2_id: " + user2_id);
+
         Chat.findOne({
             $or:[
                 {$and:[
@@ -48,4 +51,5 @@ exports.handleConnection = (socket) => {
     socket.on('message', (chatRoom, author, message) => {
        io.in(chatRoom).emit('message', chatRoom,author, message);
     })
+
 }
