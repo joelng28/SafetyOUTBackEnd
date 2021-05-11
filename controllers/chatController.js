@@ -11,27 +11,27 @@ exports.handleConnection = (socket) => {
         console.log("A socket with id " + socket.id + " has connected");
     })
 
-    socket.on('join', (user1_id, user2_id) => {
-        console.log("This is user1_id: " + user1_id);
-        console.log("This is user2_id: " + user2_id);
+    socket.on('join', (data) => {
+        console.log("This is user1_id: " + data.user1_id);
+        console.log("This is user2_id: " + data.user2_id);
 
         Chat.findOne({
             $or:[
                 {$and:[
-                    {user1_id: user1_id},
-                    {user2_id: user2_id}
+                    {user1_id: data.user1_id},
+                    {user2_id: data.user2_id}
                 ]},
                 {$and:[
-                    {user1_id: user2_id},
-                    {user2_id: user1_id}
+                    {user1_id: data.user2_id},
+                    {user2_id: data.user1_id}
                 ]}
             ]
         })
         .then(chatRoom => {
             if(!chatRoom){
                 var room = new Chat({
-                    user1_id: user1_id,
-                    user2_id: user2_id
+                    user1_id: data.user1_id,
+                    user2_id: data.user2_id
                 })
                 room.save()
                 .then(res => {
