@@ -9,6 +9,7 @@ const heroku_url = "https://safetyout.herokuapp.com"
 const url = localhost_url;
 
 
+
 describe("Donar d'alta una nova assistència: ",() => {
 
     it("Retorna status 201 quan es dona d'alta una assistència nova", (done) => {
@@ -16,10 +17,7 @@ describe("Donar d'alta una nova assistència: ",() => {
         .post('/assistance')
         .send({
             user_id: "604ca4f3482d773168499269",
-            place: {
-                longitude:"100",
-                latitude:"200"
-            },
+            place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {
                     year:"2070",
@@ -47,10 +45,7 @@ describe("Donar d'alta una nova assistència: ",() => {
         .post('/assistance')
         .send({
             user_id: "604ca4f3482d773968499269",
-            place: {
-                longitude:"100",
-                latitude:"200"
-            },
+            place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {
                     year:"2000",
@@ -78,10 +73,7 @@ describe("Donar d'alta una nova assistència: ",() => {
         .post('/assistance')
         .send({
             user_id: "604ca4f3482d773168499269",
-            place: {
-                longitude:"100",
-                latitude:"200"
-            },
+            place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {
                     year:"2070",
@@ -174,34 +166,31 @@ describe("Modificar assistència: ",() => {
         .patch('/assistance')
         .send({
             user_id: "604ca4f3482d773168499269",
-    place: {
-        "longitude":"100",
-        "latitude":"200"
-    },
-    dateInterval: {
-        startDate: {
-            "day":  "14",
-            "month":  "9",
-            "year":  "2070",
-            "hour":  "15",
-            "minute": "0" 
+            place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
+            dateInterval: {
+                startDate: {
+                    "day":  "14",
+                    "month":  "9",
+                    "year":  "2070",
+                    "hour":  "15",
+                    "minute": "0" 
 
-        }
-    },
-    newStartDate:{
-        "year": "1999",
-        "month": "10",
-        "day": "13",
-        "hour": "15",
-        "minute":"0"
-    },
-    newEndDate:{
-        "year": "2999",
-        "month": "10",
-        "day": "13",
-        "hour": "15",
-        "minute":"0"
-    }
+                }
+            },
+            newStartDate:{
+                "year": "1999",
+                "month": "10",
+                "day": "13",
+                "hour": "15",
+                "minute":"0"
+            },
+            newEndDate:{
+                "year": "2999",
+                "month": "10",
+                "day": "13",
+                "hour": "15",
+                "minute":"0"
+            }
 
         })
         .end(function(err, res){
@@ -215,10 +204,7 @@ describe("Modificar assistència: ",() => {
         .patch('/assistance')
         .send({
             user_id: "604ca4f3482d773168499269",
-            place: {
-                longitude:"59",
-                latitude:"14"
-            },
+            place_id: "ChIJqwS6fjiuEmsXXAMiOY9MSms",
             dateInterval:{
                 startDate: {
                     year:"2070",
@@ -258,10 +244,7 @@ describe("Eliminar una assistència existent: ",() => {
         .delete('/assistance')
         .send({
             user_id: "604ca4f3482d773168499269",
-            place: {
-                longitude:"100",
-                latitude:"200"
-            },
+            place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {
                     "year": "1999",
@@ -282,10 +265,7 @@ describe("Eliminar una assistència existent: ",() => {
         .delete('/assistance')
         .send({
             user_id: "604ca4f3482d773168499269",
-            place: {
-                longitude:"100",
-                latitude:"200"
-            },
+            place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {
                     year:"1984",

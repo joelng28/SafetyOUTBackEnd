@@ -5,8 +5,7 @@ const  Mongoose  = require('mongoose');
 
 exports.getOccupation = (req, res, next) => {
 
-    var longitude = req.query.longitude;
-    var latitude = req.query.latitude;
+    var place_id = req.query.place_id;
 
     var inputDate = new Date(
         req.query.year,
@@ -18,8 +17,7 @@ exports.getOccupation = (req, res, next) => {
    
     Assistance.find({
         $and: [
-            { "place.longitude": longitude},
-            { "place.latitude": latitude},
+            { "place_id": place_id},
             { "dateInterval.startDate": { $lte: inputDate } },
             { "dateInterval.endDate": { $gte: inputDate } },
         ],

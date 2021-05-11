@@ -22,8 +22,7 @@ function parseDate(JSONdate) {
 exports.postAssistance = (req, res, next) => {
 
     const user_id = req.body.user_id;
-    const latitude = req.body.place.latitude;
-    const longitude = req.body.place.longitude;
+    const place_id = req.body.place_id;
     const startDateJSON = req.body.dateInterval.startDate;
     const endDateJSON = req.body.dateInterval.endDate;
 
@@ -35,7 +34,7 @@ exports.postAssistance = (req, res, next) => {
             Assistance.findOne({
                 $and: [
                     {"user_id": Mongoose.Types.ObjectId(user_id)}, 
-                    {"place": {longitude: longitude, latitude: latitude}},
+                    {"place_id": place_id},
                     {"dateInterval.startDate": startDate}
                 ]
             })
@@ -50,7 +49,7 @@ exports.postAssistance = (req, res, next) => {
 
                 const assistance = new Assistance({
                     user_id: Mongoose.Types.ObjectId(user_id),
-                    place: req.body.place,
+                    place_id: place_id,
                     dateInterval:{
                         startDate: new Date(startDateJSON.year, startDateJSON.month, startDateJSON.day, startDateJSON.hour, startDateJSON.minute, 0),
                         endDate: new Date(endDateJSON.year, endDateJSON.month, endDateJSON.day, endDateJSON.hour, endDateJSON.minute, 0)
@@ -147,7 +146,7 @@ exports.consultAssistanceOnDate = (req,res,next) => {
 
 exports.modifyAssistance = (req,res,next) => {
     const userId = req.body.user_id;
-    const place = req.body.place;
+    const place_id = req.body.place_id;
     const startDateJSON = req.body.dateInterval.startDate;
 
     const newStartDateJSON = req.body.newStartDate;
@@ -158,7 +157,7 @@ exports.modifyAssistance = (req,res,next) => {
     const filter = {
         $and:[
             {user_id: Mongoose.Types.ObjectId(userId)},
-            {place: {longitude: place.longitude, latitude: place.latitude}},
+            {place_id: place_id},
             {"dateInterval.startDate": startDate}
         ]
     };
@@ -187,7 +186,7 @@ exports.modifyAssistance = (req,res,next) => {
 exports.deleteAssistance = (req, res, next) => {
 
     const userId = req.body.user_id;
-    const place = req.body.place;
+    const place_id = req.body.place_id;
     const startDateJSON = req.body.dateInterval.startDate;
 
     const startDate = parseDate(startDateJSON);
@@ -195,7 +194,7 @@ exports.deleteAssistance = (req, res, next) => {
     Assistance.findOne({
         $and:[
             {user_id: Mongoose.Types.ObjectId(userId)},
-            {place: {longitude: place.longitude, latitude: place.latitude}},
+            {place_id: place_id},
             {"dateInterval.startDate": startDate}
         ]
         })
