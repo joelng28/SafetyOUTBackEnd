@@ -132,16 +132,11 @@ exports.getUserInfo = (req, res, next) => {
             next(err);
         });       
 }
-
+/*
 exports.logInGoogle = (req, res, next) => {
 
 
-
-
-
-
-
-
+    let loadedUser;
 
     User.findOne({email:req.body.email})
         .then(user => {
@@ -178,5 +173,5 @@ exports.logInGoogle = (req, res, next) => {
 
 
 }
-
+*/
 

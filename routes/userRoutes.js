@@ -8,6 +8,6 @@ router.post('/signup', userController.signUp);
 router.post('/login', userController.logIn);
 router.get('/getUserInfo/:userId', userController.getUserInfo);
 router.get('/checkEmail/:email', userController.checkEmail);
-router.post('/loginGoogle', userController.logInGoogle);
+//router.post('/loginGoogle', userController.logInGoogle);
 
 module.exports = router;
