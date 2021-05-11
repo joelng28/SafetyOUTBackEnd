@@ -33,6 +33,9 @@ const userSchema = new Schema(
         },
         bubbles:[
             {bubbleId: Schema.ObjectId}
+        ],
+        friends: [
+            {userId: Schema.ObjectId}
         ]
 
     },

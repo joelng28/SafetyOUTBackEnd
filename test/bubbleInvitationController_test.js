@@ -121,11 +121,6 @@ describe("Acceptar invitació a bombolla: ",() => {
             expect(res).to.have.status(200);
             chai.request(url)
             .post('/bubbleInvitation/')
-            .send({
-                invitee_id: "606c65b16ccd0a00226ea7cb",
-                bubble_id: bubble_id,
-                invited_by_id: "6075a54d5aae680022afb892",
-            })
             .end(function(err, response){
                 
                 invitation_id = response.body.invitation_id;
