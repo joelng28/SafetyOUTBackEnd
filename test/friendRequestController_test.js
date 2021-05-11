@@ -49,3 +49,53 @@ describe("Realitzar una solicitud d'amistad: ",() => {
     });
 
 });
+
+describe("Acceptar una solicitud d'amistad: ",() => {
+
+    it("Retorna status 200 quan s'accepta una solicitut d'amistad i l'usuari1 no era amic de l'usuari2 ", (done) => {
+        chai.request(url)
+        .post('/friendRequest/' + '/accept')
+        
+        .end(function(err, res){
+            expect(res).to.have.status(200);
+            chai.request(url)
+            .post('/friendRequest/')
+            .send({
+                user_id_request: "606c65b16ccd0a00006ea7cb",
+                user_id_requested: "6075a54d5aae680022afb892",
+            })
+            .end(function(err, response){
+                done();
+            });
+        });
+    });
+    it("Retorna status 404 quan s'intenta acceptar una solicitut d'amistad i la solicitud no existeix", (done) => {
+        chai.request(url)
+        .post('/friendRequest/' + '606c65b16ccd0a00226ea000' + '/accept')
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+});
+
+describe("Denegar una solicitud d'amistad: ",() => {
+
+    it("Retorna status 200 quan es denega una solicitut d'amistad i l'usuari1 no era amic de l'usuari2 ", (done) => {
+        chai.request(url)
+        .post('/friendRequest/' + '/deny')
+        
+        .end(function(err, res){
+            expect(res).to.have.status(200);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta denegar una solicitut d'amistad i la solicitud no existeix", (done) => {
+        chai.request(url)
+        .post('/friendRequest/' + '606c65b16ccd0a00226ea000' + '/deny')
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+});
