@@ -28,7 +28,7 @@ describe("Realitzar una solicitud d'amistad: ",() => {
         .post('/friendRequest')
         .send({
             user_id_request: "606c65b16ccd0a00226ea7cb",
-            user_id_requested: "6075a54d5aae680022afb892",
+            user_id_requested: "6075a54d5aae000022afb892",
         })
         .end(function(err, res){
             expect(res).to.have.status(404);
@@ -39,7 +39,7 @@ describe("Realitzar una solicitud d'amistad: ",() => {
         chai.request(url)
         .post('/friendRequest')
         .send({
-            user_id_request: "606c65b16ccd0a00226ea7cb",
+            user_id_request: "606c65b16ccd0a00006ea7cb",
             user_id_requested: "6075a54d5aae680022afb892",
         })
         .end(function(err, res){
