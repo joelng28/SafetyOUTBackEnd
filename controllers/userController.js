@@ -137,6 +137,7 @@ exports.getUserInfo = (req, res, next) => {
         });       
 }
 
+
 exports.getUserFriends = (req,res, next) => {
     let loadedUser;
     User.findById(req.params.userId) 
@@ -203,46 +204,57 @@ exports.getUserBubbleInvitations = (req, res, next) => {
     });
 }
 
-/*
-exports.logInGoogle = (req, res, next) => {
 
+
+exports.logInTerceros = (req, res, next) => {
 
     let loadedUser;
 
     User.findOne({email:req.body.email})
         .then(user => {
             if(!user){
-                res.status(404).json({message: "A user with this email could not be found"});
-                const error = new Error("A user with this email could not be found");
-                error.statusCode = 404;
-                throw error;
+                const birthdayArray = req.body.birthday.slice("-");
+                const day = birthdayArray[2];
+                const month = birthdayArray[1];
+                const year = birthdayArray[0];
+
+                const user = new User({
+                    name: req.body.name,
+                    surnames: req.body.surnames,
+                    email: req.body.email,
+                    password: req.body.password,
+                    birthday: new Date(year, month, day),
+                    gender: req.body.gender,
+                    profileImage: req.body.profileImage
+                });
+            
+                user.save()
+                    .then(result =>{
+                        const token = jwt.sign({email: result.email, userId: result._id.toString()}, process.env.JWT_SECRET);
+                        res.status(201).json({token: token, message: 'User created!', userId: result._id.toString()});
+                    })
+                    .catch(err => {
+                        if(!err.statusCode){
+                            err.statusCode = 500;
+                        }
+                        next(err);
+                    }); 
             }
             else{
                 loadedUser = user;
-                return loadedUser.validPassword(req.body.password);
             }
         })
         .then(isEqual => {
-            if(!isEqual){
-                res.status(401).json({message: "Password is not correct!"});
-                const error = new Error("Wrong password");
-                error.statusCode = 401;
-                throw error;
+            const token = jwt.sign({email: loadedUser.email, userId: loadedUser._id.toString()}, process.env.JWT_SECRET);
+            res.status(200).json({token: token, message: "Logged In correctly!", userId: loadedUser._id.toString()});
             }
-            else{
-                const token = jwt.sign({email: loadedUser.email, userId: loadedUser._id.toString()}, process.env.JWT_SECRET);
-                res.status(200).json({token: token, message: "Logged In correctly!", userId: loadedUser._id.toString()});
-            }
-        })
+        )
         .catch(err => {
             if(!err.statusCode)err.statusCode=500;
             next(err);
         });
-
-
-
-
-
 }
-*/
+
+
+
 

@@ -79,8 +79,8 @@ exports.acceptFriendRequest = (req, res, next) => {
                     requested.friends.push({userId: request});
 
                     Promise.all([
-                        request.update(),
-                        requested.update()
+                        request.save(),
+                        requested.save()
                     ]).then(function(){
                         res.status(200).json({message:"User added to friends"});
                     })
@@ -103,8 +103,41 @@ exports.acceptFriendRequest = (req, res, next) => {
 }
 
 exports.denyFriendRequest = (req, res, next) => {
-    
+    const user_id_request = req.body.user_id_request;
+    const user_id_requested = req.body.user_id_requested;
+
+    FriendRequest.findOne({
+        $and:[
+        {user_id_request: Mongoose.Types.ObjectId(user_id_request)},
+        {user_id_requested: Mongoose.Types.ObjectId(user_id_requested)}
+        ]
+    })
+    .then(request => {
+        if (!request) {
+                res.status(404).json({message:"A friend request between this two users does not exist"});
+                const error = new Error();
+                error.statusCode = 404;
+                throw error;
+        }
+            request.remove()
+            .then(result => {
+                res.status(200).json({message:"Invitacion declined"});
+            })
+            .catch(err=>{
+                if(!err.statusCode){
+                    err.statusCode = 500;
+                }
+                next(err);
+            });
+        })
+        .catch(err=>{
+            if(!err.statusCode){
+              err.statusCode = 500;
+         }
+            next(err);
+        });
 }
+
 
 exports.getFriendRequest = (req, res, next) => {
     
