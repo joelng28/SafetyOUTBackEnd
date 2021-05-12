@@ -7,6 +7,7 @@ const router = express.Router();
 router.post('/signup', userController.signUp);
 router.post('/login', userController.logIn);
 router.get('/getUserInfo/:userId', userController.getUserInfo);
+router.get('/getUserFriends/:userId', userController.getUserFriends);
 router.get('/checkEmail/:email', userController.checkEmail);
 router.get('/:id/bubbles', userController.getUserBubbles);
 router.get('/:id/friendRequests', userController.getUserFriendRequests);
