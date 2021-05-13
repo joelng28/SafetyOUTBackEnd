@@ -45,14 +45,12 @@ exports.handleConnection = (socket) => {
                 socket.join(chatRoom._id.toString())
                 socket.emit('joined',chatRoom._id.toString());
             }
-
-            socket.emit('message', 1, 2, "mensaje de prueba");
         })
     })
     
     socket.on('message', (chatRoom, author, message) => {
         console.log("Un usuario ha enviado un mensaje")    
-        socket.emit('joined',"Esto es un evento de tipo joined cuando me envias un mensaje");
+        socket.emit('message', 1, 2, "mensaje de prueba");
     })
 
 }
