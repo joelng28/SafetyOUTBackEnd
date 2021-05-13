@@ -49,7 +49,8 @@ exports.handleConnection = (socket) => {
     })
     
     socket.on('message', (chatRoom, author, message) => {
-       io.in(chatRoom).emit('message', chatRoom,author, message);
+        console.log("Un usuario ha enviado un mensaje")    
+        io.in(chatRoom).emit('message', chatRoom,author, message);
     })
 
 }
