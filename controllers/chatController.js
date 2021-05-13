@@ -45,6 +45,8 @@ exports.handleConnection = (socket) => {
                 socket.join(chatRoom._id.toString())
                 socket.emit('joined',chatRoom._id.toString());
             }
+
+            socket.emit('message', 1, 2, "mensaje de prueba");
         })
     })
     
