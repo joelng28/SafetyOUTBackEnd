@@ -27,7 +27,7 @@ socket.emit('join', {user1_id: '604cb1aa228a8c10a42ce241', user2_id: '604d1f6fd6
 socket.on('joined', function(chat_id) {
    console.log("You have joined the chat room " + chat_id);
    currentChatRoom = chat_id;
-   socket.emit('message', currentChatRoom, '604cb1aa228a8c10a42ce241', 'Hello!');
+   socket.emit('message', {chatRoom: currentChatRoom, author: '604cb1aa228a8c10a42ce241', message: 'Hello!'});
 });
 
 socket.on('message', function(chatRoom, author, message){

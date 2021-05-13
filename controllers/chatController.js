@@ -48,11 +48,11 @@ exports.handleConnection = (socket) => {
         })
     })
     
-    socket.on('message', (chatRoom, author, message) => {
+    socket.on('message', (data) => {
         console.log("Un usuario ha enviado un mensaje")
-        console.log(chatRoom)
+        console.log(data.chatRoom)
         console.log(socket.rooms)    
-        io.in(chatRoom).emit('message', chatRoom,author, message);
+        io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message);
     })
 
 }
