@@ -31,7 +31,7 @@ exports.postFriendRequest = (req, res, next) => {
 
         friendRequest.save()
         .then(result => {
-            res.status(201).json({message:"A new friend request has been added"});
+            res.status(201).json({message:"A new friend request has been added", request_id: friendRequest.id});
         })
         .catch(err=>{
             if(!err.statusCode){
@@ -52,15 +52,9 @@ exports.postFriendRequest = (req, res, next) => {
 
 exports.acceptFriendRequest = (req, res, next) => {
 
-    const user_id_request = req.body.user_id_request;
-    const user_id_requested = req.body.user_id_requested;
+    var request_id = req.params.id;
 
-    FriendRequest.findOne({
-        $and:[
-        {user_id_request: Mongoose.Types.ObjectId(user_id_request)},
-        {user_id_requested: Mongoose.Types.ObjectId(user_id_requested)}
-        ]
-    })
+    FriendRequest.findById(request_id)
     .then(request => {
         if (!request) {
                 res.status(404).json({message:"A friend request between this two users does not exist"});
@@ -68,6 +62,10 @@ exports.acceptFriendRequest = (req, res, next) => {
                 error.statusCode = 404;
                 throw error;
         }
+
+        var user_id_request = request.user_id_request;
+        var user_id_requested = request.user_id_requested;
+
         request.remove()
             .then(result => {
                 //Model amistad? quantitat amics..
@@ -103,15 +101,10 @@ exports.acceptFriendRequest = (req, res, next) => {
 }
 
 exports.denyFriendRequest = (req, res, next) => {
-    const user_id_request = req.body.user_id_request;
-    const user_id_requested = req.body.user_id_requested;
+    
+    var request_id = req.params.id;
 
-    FriendRequest.findOne({
-        $and:[
-        {user_id_request: Mongoose.Types.ObjectId(user_id_request)},
-        {user_id_requested: Mongoose.Types.ObjectId(user_id_requested)}
-        ]
-    })
+    FriendRequest.findById(request_id)
     .then(request => {
         if (!request) {
                 res.status(404).json({message:"A friend request between this two users does not exist"});
@@ -119,23 +112,23 @@ exports.denyFriendRequest = (req, res, next) => {
                 error.statusCode = 404;
                 throw error;
         }
-            request.remove()
-            .then(result => {
-                res.status(200).json({message:"Invitacion declined"});
-            })
-            .catch(err=>{
-                if(!err.statusCode){
-                    err.statusCode = 500;
-                }
-                next(err);
-            });
+        request.remove()
+        .then(result => {
+            res.status(200).json({message:"Invitacion declined"});
         })
         .catch(err=>{
             if(!err.statusCode){
-              err.statusCode = 500;
-         }
+                err.statusCode = 500;
+            }
             next(err);
         });
+    })
+    .catch(err=>{
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });
 }
 
 

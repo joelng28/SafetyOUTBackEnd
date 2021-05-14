@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.post('/signup', userController.signUp);
 router.post('/login', userController.logIn);
-router.get('/getUserInfo/:userId', userController.getUserInfo);
+router.get('/', userController.getUserId);
+router.get('/:id', userController.getUserInfo);
 router.get('/getUserFriends/:userId', userController.getUserFriends);
 router.get('/checkEmail/:email', userController.checkEmail);
 
@@ -14,5 +15,7 @@ router.get('/:id/bubbles', userController.getUserBubbles);
 router.get('/:id/friendRequests', userController.getUserFriendRequests);
 router.get('/:id/bubbleInvitations', userController.getUserBubbleInvitations);
 router.post('/loginTerceros', userController.logInTerceros);
+
+router.get('/:id/chats', userController.getUserChats);
 
 module.exports = router;

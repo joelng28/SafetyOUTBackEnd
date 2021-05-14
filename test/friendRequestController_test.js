@@ -2,12 +2,14 @@ const chai = require("chai");
 const randomstring = require("randomstring")
 const chaiHttp = require("chai-http")
 const expect = require("chai").expect;
+const { request } = require("chai");
 
 chai.use(chaiHttp);
 const localhost_url = "http://localhost:8080";
 const heroku_url = "https://safetyout.herokuapp.com"
 const url = localhost_url;
 
+var request_id;
 
 describe("Realitzar una solicitud d'amistad: ",() => {
 
@@ -20,6 +22,7 @@ describe("Realitzar una solicitud d'amistad: ",() => {
         })
         .end(function(err, res){
             expect(res).to.have.status(201);
+            request_id = res.body.request_id;
             done();
         });
     });
@@ -54,17 +57,17 @@ describe("Acceptar una solicitud d'amistad: ",() => {
 
     it("Retorna status 200 quan s'accepta una solicitut d'amistad i l'usuari1 no era amic de l'usuari2 ", (done) => {
         chai.request(url)
-        .post('/friendRequest/' + '/accept')
-        
+        .post('/friendRequest/' + request_id + '/accept')
         .end(function(err, res){
             expect(res).to.have.status(200);
             chai.request(url)
             .post('/friendRequest/')
             .send({
-                user_id_request: "606c65b16ccd0a00006ea7cb",
-                user_id_requested: "6075a54d5aae680022afb892",
+                user_id_request: "604ca4f3482d773168499269",
+                user_id_requested: "604cb1aa228a8c10a42ce241",
             })
             .end(function(err, response){
+                request_id = response.body.request_id;
                 done();
             });
         });
@@ -80,11 +83,9 @@ describe("Acceptar una solicitud d'amistad: ",() => {
 });
 
 describe("Denegar una solicitud d'amistad: ",() => {
-
-    it("Retorna status 200 quan es denega una solicitut d'amistad i l'usuari1 no era amic de l'usuari2 ", (done) => {
+    it("Retorna status 200 quan es denega una solicitut d'amistad", (done) => {
         chai.request(url)
-        .post('/friendRequest/' + '/deny')
-        
+        .post('/friendRequest/' + request_id + '/deny')
         .end(function(err, res){
             expect(res).to.have.status(200);
             done();

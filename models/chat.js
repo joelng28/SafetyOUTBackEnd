@@ -6,7 +6,7 @@ const chatSchema = new Schema(
         user1_id: Schema.ObjectId,
         user2_id: Schema.ObjectId,
         messages: [
-            {username: String, message:String}
+            {user_id: Schema.ObjectId, username: String, message:String}
         ]
     },
     {timestamps:true}

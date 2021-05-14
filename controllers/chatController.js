@@ -51,8 +51,37 @@ exports.handleConnection = (socket) => {
     socket.on('message', (data) => {
         console.log("Un usuario ha enviado un mensaje")
         console.log(data.chatRoom)
-        console.log(socket.rooms)    
-        io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message);
+        console.log(socket.rooms)
+        
+        Chat.findById(data.chatRoom)
+        .then(chatRoom => {
+            User.findById(data.author)
+            .then(user => {
+                chatRoom.messages.push({user_id: data.author, username: user.modelName, message: data.message});
+                chatRoom.save()
+                .then(function(){
+                    io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message);
+                })
+            })               
+        })
     })
+}
 
+exports.getMessages = (req, res, next) => {
+    var chat_id = req.params.id;
+    Chat.findById(chat_id)
+    .then(chat => {
+        if(!chat){
+            res.status(404).json({message:"A chat with this id could not be found"});
+            const error = new Error("A chat with this id could not be found");
+            error.statusCode = 404;
+            throw error;               
+        }
+
+        res.status(200).json({messages: chat.messages});
+    })
+    .catch(err => {
+        if(!err.statusCode)err.statusCode=500;
+        next(err);
+    }); 
 }

@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Bubble = require('../models/bubble');
 const FriendRequest = require('../models/friendRequest');
 const BubbleInvitation = require('../models/bubbleInvitation');
+const Chat = require('../models/chat');
 const jwt = require("jsonwebtoken");
 
 
@@ -113,11 +114,21 @@ exports.logIn = (req, res, next) => {
         });
 }
 
+exports.getUserId = (req, res, next) => {
+
+    var user_email = req.query.email;
+    User.findOne({email: user_email})
+    .then(user => {
+        res.status(200).json({id: user.id});
+    })
+}
+
+
 exports.getUserInfo = (req, res, next) => {
 
     let loadedUser;
 
-    User.findById(req.params.userId) 
+    User.findById(req.params.id) 
         .then(user => {
             if(!user){
                 res.status(404).json({message: "A user with this id could not be found"});
@@ -204,7 +215,25 @@ exports.getUserBubbleInvitations = (req, res, next) => {
     });
 }
 
+exports.getUserChats = (req, res, next) => {
 
+    var user_id = req.params.id;
+    Chat.find({
+        $or:[
+            {user1_id: user_id},
+            {user2_id: user_id}
+        ]
+    })
+    .then(chats => {
+        res.status(200).json({chats: chats});
+    })
+    .catch(err=>{
+        if(!err.statusCode){
+          err.statusCode = 500;
+     }
+        next(err);
+    });
+}
 
 exports.logInTerceros = (req, res, next) => {
 
