@@ -161,7 +161,7 @@ exports.getUserFriends = (req,res, next) => {
             }
             else{
                 loadedUser = user;
-                res.status(200).json({message:loadedUser.friends});
+                res.status(200).json({friends:loadedUser.friends});
             }
         })
         .catch(err => {
