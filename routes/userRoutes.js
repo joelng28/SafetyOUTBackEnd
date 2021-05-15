@@ -8,7 +8,7 @@ router.post('/signup', userController.signUp);
 router.post('/login', userController.logIn);
 router.get('/', userController.getUserId);
 router.get('/:id', userController.getUserInfo);
-router.get('/getUserFriends/:userId', userController.getUserFriends);
+router.get('/:id/friends', userController.getUserFriends);
 router.get('/checkEmail/:email', userController.checkEmail);
 
 router.get('/:id/bubbles', userController.getUserBubbles);

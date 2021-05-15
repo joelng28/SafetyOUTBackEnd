@@ -151,7 +151,7 @@ exports.getUserInfo = (req, res, next) => {
 
 exports.getUserFriends = (req,res, next) => {
     let loadedUser;
-    User.findById(req.params.userId) 
+    User.findById(req.params.id) 
         .then(user => {
             if(!user){
                 res.status(404).json({message: "A user with this id could not be found"});
