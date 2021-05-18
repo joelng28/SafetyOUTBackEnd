@@ -70,24 +70,16 @@ exports.acceptFriendRequest = (req, res, next) => {
             .then(result => {
                 //Model amistad? quantitat amics..
                 Promise.all([
-                    User.findById(user_id_request),
-                    User.findById(user_id_requested)
-                ]).then(([request, requested]) => {
-                    request.friends.push({userId:requested});
-                    requested.friends.push({userId: request});
-
-                    Promise.all([
-                        request.save(),
-                        requested.save()
-                    ]).then(function(){
-                        res.status(200).json({message:"User added to friends"});
-                    })
-                    .catch(err=>{
-                        if(!err.statusCode){
-                            err.statusCode = 500;
-                        }
-                        next(err);
-                    });
+                    User.findOneAndUpdate(
+                        {"_id": user_id_request},
+                        {$push: {friends: {userId: user_id_requested}}}
+                    ),
+                    User.findOneAndUpdate(
+                        {"_id": user_id_requested},
+                        {$push: {friends: {userId: user_id_request}}}
+                    )
+                ]).then(function(){
+                    res.status(200).json({message:"User added to friends"});
                 })
             })
     .catch(err=>{
