@@ -271,17 +271,10 @@ exports.logInTerceros = (req, res, next) => {
             }
             else{
                 loadedUser = user;
+                const token = jwt.sign({email: loadedUser.email, userId: loadedUser._id.toString()}, process.env.JWT_SECRET);
+                res.status(200).json({token: token, message: "Logged In correctly!", userId: loadedUser._id.toString()});
             }
         })
-        .then(isEqual => {
-            const token = jwt.sign({email: loadedUser.email, userId: loadedUser._id.toString()}, process.env.JWT_SECRET);
-            res.status(200).json({token: token, message: "Logged In correctly!", userId: loadedUser._id.toString()});
-            }
-        )
-        .catch(err => {
-            if(!err.statusCode)err.statusCode=500;
-            next(err);
-        });
 }
 
 
