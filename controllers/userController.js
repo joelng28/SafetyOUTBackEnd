@@ -242,17 +242,13 @@ exports.logInTerceros = (req, res, next) => {
     User.findOne({email:req.body.email})
         .then(user => {
             if(!user){
-                const birthdayArray = req.body.birthday.slice("-");
-                const day = birthdayArray[2];
-                const month = birthdayArray[1];
-                const year = birthdayArray[0];
 
                 const user = new User({
                     name: req.body.name,
                     surnames: req.body.surnames,
                     email: req.body.email,
                     password: req.body.password,
-                    birthday: new Date(year, month, day),
+                    birthday: new Date(1999, 10, 13),
                     gender: req.body.gender,
                     profileImage: req.body.profileImage
                 });
