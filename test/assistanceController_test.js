@@ -16,7 +16,7 @@ describe("Donar d'alta una nova assistència: ",() => {
         chai.request(url)
         .post('/assistance')
         .send({
-            user_id: "604ca4f3482d773168499269",
+            user_id: "60a39b58f458df0022709fab",
             place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {
@@ -44,7 +44,7 @@ describe("Donar d'alta una nova assistència: ",() => {
         chai.request(url)
         .post('/assistance')
         .send({
-            user_id: "604ca4f3482d773968499269",
+            user_id: "60a39b58f458df0022709000",
             place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {
@@ -72,7 +72,7 @@ describe("Donar d'alta una nova assistència: ",() => {
         chai.request(url)
         .post('/assistance')
         .send({
-            user_id: "604ca4f3482d773168499269",
+            user_id: "60a39b58f458df0022709fab",
             place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {
@@ -104,7 +104,7 @@ describe("Consultar assistències futures: ",() => {
         chai.request(url)
         .get('/assistance/consultFuture')
         .query({
-            user_id: "604ca4f3482d773168499269",
+            user_id: "60a39b58f458df0022709fab",
         })
         .end(function(err, res){
             expect(res).to.have.status(200);
@@ -116,7 +116,7 @@ describe("Consultar assistències futures: ",() => {
         chai.request(url)
         .get('/assistance/consultFuture')
         .query({
-            user_id: "604ca4f3482d773168499869",
+            user_id: "60a39b58f458df0022709000",
         })
         .end(function(err, res){
             expect(res).to.have.status(409);
@@ -132,7 +132,7 @@ describe("Consultar assistències en una data: ",() => {
         chai.request(url)
         .get('/assistance/consultOnDate')
         .query({
-            user_id: "604ca4f3482d773168499269",
+            user_id: "60a39b58f458df0022709fab",
             year:"2070",
             month:"9",
             day:"14"
@@ -147,7 +147,7 @@ describe("Consultar assistències en una data: ",() => {
         chai.request(url)
         .get('/assistance/consultOnDate')
         .query({
-            user_id: "604ca4f3482d773168499869",
+            user_id: "60a39b58f458df0022709000",
             year:"2000",
             month:"9",
             day:"14",
@@ -165,7 +165,7 @@ describe("Modificar assistència: ",() => {
         chai.request(url)
         .patch('/assistance')
         .send({
-            user_id: "604ca4f3482d773168499269",
+            user_id: "60a39b58f458df0022709fab",
             place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval: {
                 startDate: {
@@ -203,7 +203,7 @@ describe("Modificar assistència: ",() => {
         chai.request(url)
         .patch('/assistance')
         .send({
-            user_id: "604ca4f3482d773168499269",
+            user_id: "60a39b58f458df0022709fab",
             place_id: "ChIJqwS6fjiuEmsXXAMiOY9MSms",
             dateInterval:{
                 startDate: {
@@ -243,7 +243,7 @@ describe("Eliminar una assistència existent: ",() => {
         chai.request(url)
         .delete('/assistance')
         .send({
-            user_id: "604ca4f3482d773168499269",
+            user_id: "60a39b58f458df0022709fab",
             place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {

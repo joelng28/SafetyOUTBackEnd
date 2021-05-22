@@ -17,8 +17,8 @@ describe("Realitzar una solicitud d'amistad: ",() => {
         chai.request(url)
         .post('/friendRequest')
         .send({
-            user_id_request: "606c65b16ccd0a00226ea7cb",
-            user_id_requested: "6075a54d5aae680022afb892",
+            user_id_request: "60a39b58f458df0022709fab",
+            user_id_requested: "60a3a16bf458df0022709fb7",
         })
         .end(function(err, res){
             expect(res).to.have.status(201);
@@ -30,8 +30,8 @@ describe("Realitzar una solicitud d'amistad: ",() => {
         chai.request(url)
         .post('/friendRequest')
         .send({
-            user_id_request: "606c65b16ccd0a00226ea7cb",
-            user_id_requested: "6075a54d5aae000022afb892",
+            user_id_request: "60a39b58f458df0022709fab",
+            user_id_requested: "60a3a16bf458df0022709000",
         })
         .end(function(err, res){
             expect(res).to.have.status(404);
@@ -42,8 +42,8 @@ describe("Realitzar una solicitud d'amistad: ",() => {
         chai.request(url)
         .post('/friendRequest')
         .send({
-            user_id_request: "606c65b16ccd0a00006ea7cb",
-            user_id_requested: "6075a54d5aae680022afb892",
+            user_id_request: "60a39b58f458df0022000fab",
+            user_id_requested: "60a3a16bf458df0022709fb7",
         })
         .end(function(err, res){
             expect(res).to.have.status(404);
@@ -63,8 +63,8 @@ describe("Acceptar una solicitud d'amistad: ",() => {
             chai.request(url)
             .post('/friendRequest/')
             .send({
-                user_id_request: "604ca4f3482d773168499269",
-                user_id_requested: "604cb1aa228a8c10a42ce241",
+                user_id_request: "60a39b58f458df0022709fab",
+                user_id_requested: "60a3ae6197f5da46b03334e3",
             })
             .end(function(err, response){
                 request_id = response.body.request_id;

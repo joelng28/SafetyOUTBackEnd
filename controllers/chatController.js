@@ -85,3 +85,53 @@ exports.getMessages = (req, res, next) => {
         next(err);
     }); 
 }
+
+exports.deleteChat = (req, res, next) => {
+    var chat_id = req.params.id;
+    Chat.findOneAndDelete(chat_id)
+    .then(chat => {
+        if(!chat){
+            res.status(404).json({message:"A chat with this id could not be found"});
+            const error = new Error("A chat with this id could not be found");
+            error.statusCode = 404;
+            throw error;               
+        }
+
+        res.status(200).json({message: "The chat has been deleted"});
+    })
+    .catch(err => {
+        if(!err.statusCode)err.statusCode=500;
+        next(err);
+    }); 
+}
+
+exports.createChat = (req, res, next) => {
+
+    Chat.findOne({
+        $or:[
+            {$and:[
+                {user1_id: req.body.user1_id},
+                {user2_id: req.body.user2_id}
+            ]},
+            {$and:[
+                {user1_id: req.body.user2_id},
+                {user2_id: req.body.user1_id}
+            ]}
+        ]
+    })
+    .then(chatRoom => {
+        if(!chatRoom){
+            var room = new Chat({
+                user1_id: req.body.user1_id,
+                user2_id: req.body.user2_id
+            })
+            room.save()
+            .then(function(){
+                res.status(201).json({message:"Chat created successfully", chat_id: room._id.toString()});
+            })
+        }
+        else{
+            res.status(409).json({message:"Chat already exists", chat_id: chatRoom._id.toString()});
+        }
+    })
+}

@@ -16,7 +16,7 @@ describe("Donar d'alta una bombolla: ",() => {
         chai.request(url)
         .post('/bubble')
         .send({
-            user_id: "6075a54d5aae680022afb892",
+            user_id: "60a39b58f458df0022709fab",
             bubble_name: "Test"
         })
         .end(function(err, res){
@@ -29,7 +29,7 @@ describe("Donar d'alta una bombolla: ",() => {
         chai.request(url)
         .post('/bubble')
         .send({
-            user_id: "606c65b16ccd0a00226ea7cc",
+            user_id: "60a39b58f458df0022709000",
             bubble_name: "Test"
         })
         .end(function(err, res){
@@ -41,7 +41,7 @@ describe("Donar d'alta una bombolla: ",() => {
         chai.request(url)
         .post('/bubble')
         .send({
-            user_id: "6075a54d5aae680022afb892",
+            user_id: "60a39b58f458df0022709fab",
             bubble_name: "Test"
         })
         .end(function(err, res){
@@ -59,9 +59,9 @@ describe("Donar d'alta una nova invitació a bombolla: ",() => {
         chai.request(url)
         .post('/bubbleInvitation/')
         .send({
-            invitee_id: "606c65b16ccd0a00226ea7cb",
+            invitee_id: "60a3a16bf458df0022709fb7",
             bubble_id: bubble_id,
-            invited_by_id: "6075a54d5aae680022afb892",
+            invited_by_id: "60a39b58f458df0022709fab",
         })
         .end(function(err, res){
             expect(res).to.have.status(201);
@@ -73,9 +73,9 @@ describe("Donar d'alta una nova invitació a bombolla: ",() => {
         chai.request(url)
         .post('/bubbleInvitation/')
         .send({
-            invitee_id: "606c65b06ccd0a00226ea7cb",
+            invitee_id: "60a3a16bf458df0022709000",
             bubble_id: bubble_id,
-            invited_by_id: "6075a54d5aae680022afb892", 
+            invited_by_id: "60a39b58f458df0022709fab", 
         })
         .end(function(err, res){
             expect(res).to.have.status(404);
@@ -86,9 +86,9 @@ describe("Donar d'alta una nova invitació a bombolla: ",() => {
         chai.request(url)
         .post('/bubbleInvitation/')
         .send({
-            invitee_id: "606c65b16ccd0a00226ea7cb",
+            invitee_id: "60a3a16bf458df0022709fb7",
             bubble_id: bubble_id,
-            invited_by_id: "6075a54d5bae680022afb892",
+            invited_by_id: "60a39b58f458df0022709000",
         })
         .end(function(err, res){
             expect(res).to.have.status(404);
@@ -99,9 +99,9 @@ describe("Donar d'alta una nova invitació a bombolla: ",() => {
         chai.request(url)
         .post('/bubbleInvitation/')
         .send({
-            invitee_id: "606c65b16ccd0a00226ea7cb",
+            invitee_id: "60a3a16bf458df0022709fb7",
             bubble_id: "606c65b16ccd0a00226ea000",
-            invited_by_id: "6075a54d5aae680022afb892",
+            invited_by_id: "60a39b58f458df0022709fab",
         })
         .end(function(err, res){
             expect(res).to.have.status(404);
@@ -122,9 +122,9 @@ describe("Acceptar invitació a bombolla: ",() => {
             chai.request(url)
             .post('/bubbleInvitation/')
             .send({
-                invitee_id: "606c65b16ccd0a00226ea7cb",
+                invitee_id: "60a3ae6197f5da46b03334e3",
                 bubble_id: bubble_id,
-                invited_by_id: "6075a54d5aae680022afb892",
+                invited_by_id: "60a39b58f458df0022709fab",
             })
             .end(function(err, response){
                 
