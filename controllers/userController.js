@@ -284,6 +284,17 @@ exports.logInTerceros = (req, res, next) => {
         });
 }
 
+/*
 
+exports.deleteAccount = (req, res, next) => {
+
+    var user_email = req.query.email;
+    User.findOne({email: user_email})
+    .then(user => {
+        res.status(200).json({id: user.id});
+    })
+}
+
+*/
 
 

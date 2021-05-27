@@ -15,6 +15,7 @@ router.get('/:id/bubbles', userController.getUserBubbles);
 router.get('/:id/friendRequests', userController.getUserFriendRequests);
 router.get('/:id/bubbleInvitations', userController.getUserBubbleInvitations);
 router.post('/loginTerceros', userController.logInTerceros);
+router.delete('/deleteAccount', userController.deleteAccount)
 
 router.get('/:id/chats', userController.getUserChats);
 
