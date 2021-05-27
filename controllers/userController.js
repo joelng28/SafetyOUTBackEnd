@@ -284,7 +284,7 @@ exports.logInTerceros = (req, res, next) => {
         });
 }
 
-/*
+
 
 exports.deleteAccount = (req, res, next) => {
 
@@ -295,6 +295,6 @@ exports.deleteAccount = (req, res, next) => {
     })
 }
 
-*/
+
 
 
