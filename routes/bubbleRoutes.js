@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post('/',bubbleController.createBubble);
 router.delete('/',bubbleController.deleteBubble)
+router.delete('/',bubbleController.deleteBubbleContact)
 
 
 module.exports = router;

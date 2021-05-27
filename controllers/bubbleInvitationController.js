@@ -147,3 +147,4 @@ exports.denyInvitation = (req, res, next) => {
 exports.getInvitation = (req, res, next) => {
     
 }
+
