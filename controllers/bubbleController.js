@@ -96,12 +96,12 @@ exports.deleteBubbleContact = (req, res, next) => {
                 })
                 .then(bubble => {
                     if(bubble) {
-                         ////borrar algun usuari de bubble.members
+                         ////borra algun usuari de bubble.members
                         const user_id2=req.body.user_id;
                         User.findOne({_id: user_id2})
                         .then(user => {
                                 if(user){
-                                    //mira si esta als membres de la bombolla bubble
+                                    //mira si esta als membres de la bombolla bubble, FER COSES AQUI
                                 }
                                 else {
                                     res.status(404).json({message: 'The user that we wants to delete does not exist'})
@@ -110,6 +110,42 @@ exports.deleteBubbleContact = (req, res, next) => {
                     }
                     else {
                         res.status(404).json({message: 'A bubble with this id does not exist, so you can not delete someone'});
+                    }
+                })
+            }
+            else{
+                res.status(404).json({message: 'A user with this id does not exist'});
+            }
+        }
+    )
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    }); 
+                    
+}
+
+exports.leaveBubble = (req, res, next) => {
+    const bubble_name = req.body.bubble_name;
+    const user_id=req.body.user_id;
+    User.findOne({_id: user_id})
+    .then(user => {
+            if(user){
+                Bubble.findOne({
+                    $and:[
+                        {admin: user_id}, //CAMBIAR AIXO, HAURIA DE SER ID_BUBBLE
+                        {name: bubble_name}
+                        //a mes, hem de mirar que l'usuari sigui membre de la bombolla
+                    ]
+                })
+                .then(bubble => {
+                    if(bubble) {
+                        //FER COSES AQUI, 
+                    }
+                    else {
+                        res.status(404).json({message: 'A bubble with this id does not exist or this user is not in this bubble, so we can not leave any bubble'});
                     }
                 })
             }
