@@ -97,11 +97,12 @@ exports.deleteBubbleContact = (req, res, next) => {
                 .then(bubble => {
                     if(bubble) {
                          ////borra algun usuari de bubble.members
-                        const user_id2=req.body.user_id;
+                        const user_id2=req.body.user_id_delete;
                         User.findOne({_id: user_id2})
                         .then(user => {
                                 if(user){
-                                    //mira si esta als membres de la bombolla bubble, FER COSES AQUI
+                                    bubble.members.delete(user);
+                                    bubble.save();
                                 }
                                 else {
                                     res.status(404).json({message: 'The user that we wants to delete does not exist'})
@@ -135,14 +136,15 @@ exports.leaveBubble = (req, res, next) => {
             if(user){
                 Bubble.findOne({
                     $and:[
-                        {admin: user_id}, //CAMBIAR AIXO, HAURIA DE SER ID_BUBBLE
+                     //CAMBIAR AIXO, HAURIA DE SER ID_BUBBLE
                         {name: bubble_name}
                         //a mes, hem de mirar que l'usuari sigui membre de la bombolla
                     ]
                 })
                 .then(bubble => {
                     if(bubble) {
-                        //FER COSES AQUI, 
+                        bubble.members.delete(user);
+                        bubble.save();
                     }
                     else {
                         res.status(404).json({message: 'A bubble with this id does not exist or this user is not in this bubble, so we can not leave any bubble'});

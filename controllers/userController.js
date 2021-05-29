@@ -291,8 +291,15 @@ exports.deleteAccount = (req, res, next) => {
     var user_email = req.query.email;
     User.findOne({email: user_email})
     .then(user => {
-        res.status(200).json({id: user.id});
-    })
+        if (user) {
+            user.deleteOne();
+            save();
+        }
+        else {
+
+            res.status(404).json({message: 'User can not be deleted because user does not exist'});
+        }   
+     })   
 }
 
 
