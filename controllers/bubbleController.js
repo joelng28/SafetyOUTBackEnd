@@ -81,3 +81,52 @@ exports.deleteBubble = (req, res, next) => {
         }
     })   
 }
+
+exports.modifyBubble = (req, res, next) => {
+    bubble_name = req.body.bubble_name;
+    bubble_admin = req.body.bubble_admin;
+    User.findById(bubble_admin)
+    .then(user => {
+        if(user) {
+
+        }
+        else {
+            res.status(404).json({message: 'The admin user does not exist'});
+        }
+    })
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+    bubble_new_name = req.body.bubble_new_name;
+    bubble_new_admin = req.body.bubble_new_admin;
+    const filter = {
+        $and:[
+            {name: bubble_name},
+            {admin: bubble_admin}
+        ]
+    };
+    const update = { 
+        "name": bubble_new_name,
+        "admin": bubble_new_admin
+    };
+    Bubble.findOneAndUpdate(filter,update)
+    .then(bubble => {
+        if(!bubble) {
+            res.status(404).json({message: 'This user does not administrate a bubble with this name'});
+        }
+        else {
+           res.status(200).json({message: 'Bubble updated!'});
+        }
+    })
+        .catch(err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
+         });
+}
+
+

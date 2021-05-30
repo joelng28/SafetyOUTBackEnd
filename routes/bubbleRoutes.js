@@ -5,7 +5,7 @@ const bubbleController = require('../controllers/bubbleController');
 const router = express.Router();
 
 router.post('/',bubbleController.createBubble);
-router.delete('/',bubbleController.deleteBubble)
-
+router.delete('/',bubbleController.deleteBubble);
+router.patch('/',bubbleController.modifyBubble);
 
 module.exports = router;
