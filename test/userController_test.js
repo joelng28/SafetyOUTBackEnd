@@ -124,4 +124,50 @@ describe("Consulta perfil",() => {
 
 });
 
+describe("Consulta perfil",() => {
+    it("Retorna status 200 quan es consulta un perfil qualsevol amb èxit", (done) => {
+        chai.request(url)
+        .get('/user/' + "604ca4f3482d773168499269")
+        .end(function(err, res){
+            expect(res).to.have.status(200);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta consultar perfil d'un usuari que no existeix", (done) => {
+        chai.request(url)
+        .get('/user/' + "604ca4f3482d773160499269")
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+    
 
+});
+
+var user_id;
+
+describe("Elimina compte: ",() => {
+    it("Retorna status 200 quan s'elimina el compte d'un usuari amb éxit", (done) => {
+        chai.request(url)
+        .delete('/user')
+        .send({
+            user_id: user_id
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(200);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta donar de baixa un compte d'un usuari que no existeix", (done) => {
+        chai.request(url)
+        .delete('/user')
+        .send({
+            user_id: "604ca4f3482d773160499269"
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+});
