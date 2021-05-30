@@ -287,19 +287,11 @@ exports.logInTerceros = (req, res, next) => {
 
 
 exports.deleteAccount = (req, res, next) => {
-
-    var user_email = req.query.email;
-    User.findOne({email: user_email})
-    .then(user => {
-        if (user) {
-            user.deleteOne();
-            save();
-        }
-        else {
-
-            res.status(404).json({message: 'User can not be deleted because user does not exist'});
-        }   
-     })   
+    var user_id = req.params.userId;
+    User.findOneAndDelete({id: user_id})
+    .then(function(){
+        res.status(200).json({message: 'Completed!'});
+    })
 }
 
 
