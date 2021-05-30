@@ -4,6 +4,7 @@ const FriendRequest = require('../models/friendRequest');
 const BubbleInvitation = require('../models/bubbleInvitation');
 const Chat = require('../models/chat');
 const jwt = require("jsonwebtoken");
+const  Mongoose  = require('mongoose');
 
 
 
@@ -272,6 +273,46 @@ exports.logInTerceros = (req, res, next) => {
             }
         })
 }
+
+exports.changeUserInfo = (req, res, next) => {
+
+    user_id = req.body.user_id;
+    user_id = Mongoose.Types.ObjectId(user_id);
+
+    new_name = req.body.new_name;
+    new_surnames = req.body.new_surnames;
+    new_password = req.body.new_password;
+    new_gender = req.body.new_gender;
+    new_email = req.body.new_email;
+    new_profileImage = req.body.new_profileImage;
+
+    const update = { 
+        "name": new_name,
+        "surnames": new_surnames,
+        "password": new_password,
+        "gender": new_gender,
+        "email": new_email,
+        "profileImage": req.body.new_profileImage
+    };
+
+    User.findByIdAndUpdate(user_id,update)
+    .then(user => {
+        if(!user) {
+            res.status(404).json({message: 'This user does not exist'});
+        }
+        else {
+           res.status(200).json({message: 'User information modified!'});
+        }
+    })
+    .catch(err => {
+        if(!err.statusCode){
+                err.statusCode = 500;
+        }
+        next(err);
+    });
+}
+
+
 
 
 

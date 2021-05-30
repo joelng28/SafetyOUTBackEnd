@@ -18,4 +18,6 @@ router.post('/loginTerceros', userController.logInTerceros);
 
 router.get('/:id/chats', userController.getUserChats);
 
+router.patch('/modifyInfo',userController.changeUserInfo);
+
 module.exports = router;
