@@ -127,3 +127,65 @@ exports.denyFriendRequest = (req, res, next) => {
 exports.getFriendRequest = (req, res, next) => {
     
 }
+
+
+exports.deleteFriend = (req,res,next) => {
+    user_id = req.params.id;
+    friend_id = req.body.friend_id;
+    User.findById(user_id)
+    .then(user => {
+        if(user) {
+              User.findById(friend_id)
+              .then( friend => {
+                  if(friend) {
+                      friends=containsObject(friend_id,user.friends);
+                      containsObject(user_id,friend.friends);
+                      if(friends) {
+                      user.save()
+                      .catch(err => {
+                        if(!err.statusCode){
+                            err.statusCode = 500;
+                        }
+                        next(err);
+                    });
+                        friend.save()
+                              .then(result =>{
+                                  res.status(201).json({message: "Friend deleted"});
+                               })
+                            .catch(err => {
+                            if(!err.statusCode){
+                                err.statusCode = 500;
+                            }
+                            next(err);
+                            });
+                        }
+                    else res.status(404).json({message: "These users are not friends"});
+                  }
+                  else {
+                    res.status(404).json({message: 'The friend does not exist'});
+                  }
+              })
+        }
+        else {
+            res.status(404).json({message: 'The user does not exist'});
+        }
+    })
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+}
+
+function containsObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i].userId == obj) {
+            list.splice(i,1)
+            return true;
+        }
+    }
+
+    return false;
+}

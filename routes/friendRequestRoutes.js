@@ -9,4 +9,6 @@ router.post('/:id/accept', friendRequestController.acceptFriendRequest);
 router.post('/:id/deny', friendRequestController.denyFriendRequest);
 router.get('/:id', friendRequestController.getFriendRequest);
 
+router.delete('/:id/deleteFriend',friendRequestController.deleteFriend);
+
 module.exports = router;

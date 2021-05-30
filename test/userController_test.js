@@ -128,3 +128,35 @@ describe("Consulta perfil",() => {
 });
 
 
+
+describe("Modifica perfil",() => {
+    it("Retorna status 201 quan es consulta un perfil qualsevol amb èxit", (done) => {
+        chai.request(url)
+        .patch('/user/' + user_id + '/modifyInfo')
+        .send({
+            new_name: "Sergi",
+            new_surnames: "Doce Planas",
+            new_email: userEmail,
+            new_password: "123456",
+            new_birthday: new Date(1999, 9, 12),
+            new_gender: "Male",
+            new_profileImage: "empty" 
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(201);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta modificar la informació d'un usuari que no existeix", (done) => {
+        chai.request(url)
+        .get('/user/' + "604ca4f3482d773160499000")
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+    
+
+});
+
+

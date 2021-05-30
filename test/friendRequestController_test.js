@@ -101,5 +101,52 @@ describe("Denegar una solicitud d'amistad: ",() => {
     });
 });
 
+describe("Esborrar contate",() => {
+    it("Retorna status 201 quan s'esborra un contacte", (done) => {
+        chai.request(url)
+        .delete('/friendRequest/' + '60a39b58f458df0022709fab' + '/deleteFriend')
+        .send({
+            friend_id: "60a3a16bf458df0022709fb7",
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(201);
+            done();
+        });
+    });
+    it("Retorna status 404 quan l'usuari no existeix", (done) => {
+        chai.request(url)
+        .delete('/friendRequest/' + '50a39b58f458df0022000fab' + '/deleteFriend')
+        .send({
+            friend_id: "60a3a16bf458df0022709fb7",
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+    it("Retorna status 404 quan l'amic no existeix", (done) => {
+        chai.request(url)
+        .delete('/friendRequest/' + '60a39b58f458df0022709fab' + '/deleteFriend')
+        .send({
+            friend_id: "50a39b58f458df0022000fab",
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+    it("Retorna status 404 quan els usuaris no son amics", (done) => {
+        chai.request(url)
+        .delete('/friendRequest/' + '60a39b58f458df0022709fab' + '/deleteFriend')
+        .send({
+            friend_id: "60a3a16bf458df0022709fb7",
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+});
+
 
 

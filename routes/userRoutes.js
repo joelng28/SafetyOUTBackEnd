@@ -18,8 +18,7 @@ router.post('/loginTerceros', userController.logInTerceros);
 
 router.get('/:id/chats', userController.getUserChats);
 
-router.patch('/modifyInfo',userController.changeUserInfo);
+router.patch('/:id/modifyInfo',userController.changeUserInfo);
 
-router.delete('/deleteFriend',userController.deleteFriend);
 
 module.exports = router;

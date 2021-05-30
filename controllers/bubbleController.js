@@ -83,42 +83,20 @@ exports.deleteBubble = (req, res, next) => {
 }
 
 exports.modifyBubble = (req, res, next) => {
-    bubble_name = req.body.bubble_name;
-    bubble_admin = req.body.bubble_admin;
-    User.findById(bubble_admin)
-    .then(user => {
-        if(user) {
-
-        }
-        else {
-            res.status(404).json({message: 'The admin user does not exist'});
-        }
-    })
-    .catch(err => {
-        if(!err.statusCode){
-            err.statusCode = 500;
-        }
-        next(err);
-    });
+    bubble_id = req.body.bubble_id;
     bubble_new_name = req.body.bubble_new_name;
     bubble_new_admin = req.body.bubble_new_admin;
-    const filter = {
-        $and:[
-            {name: bubble_name},
-            {admin: bubble_admin}
-        ]
-    };
     const update = { 
         "name": bubble_new_name,
         "admin": bubble_new_admin
     };
-    Bubble.findOneAndUpdate(filter,update)
+    Bubble.findByIdAndUpdate(bubble_id,update)
     .then(bubble => {
         if(!bubble) {
             res.status(404).json({message: 'This user does not administrate a bubble with this name'});
         }
         else {
-           res.status(200).json({message: 'Bubble updated!'});
+           res.status(201).json({message: 'Bubble updated!'});
         }
     })
         .catch(err => {

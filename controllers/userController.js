@@ -276,8 +276,8 @@ exports.logInTerceros = (req, res, next) => {
 
 exports.changeUserInfo = (req, res, next) => {
 
-    user_id = req.body.user_id;
-    user_id = Mongoose.Types.ObjectId(user_id);
+    user_id = req.params.id;
+    //user_id = Mongoose.Types.ObjectId(user_id);
 
     new_name = req.body.new_name;
     new_surnames = req.body.new_surnames;
@@ -301,7 +301,7 @@ exports.changeUserInfo = (req, res, next) => {
             res.status(404).json({message: 'This user does not exist'});
         }
         else {
-           res.status(200).json({message: 'User information modified!'});
+           res.status(201).json({message: 'User information modified!'});
         }
     })
     .catch(err => {

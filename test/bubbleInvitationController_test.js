@@ -51,6 +51,35 @@ describe("Donar d'alta una bombolla: ",() => {
     });
 });
 
+describe("Modifica una bombolla: ",() => {
+    it("Retorna status 201 quan es modifica una bombolla", (done) => {
+        chai.request(url)
+        .patch('/bubble')
+        .send({
+            bubble_id: bubble_id,
+            bubble_new_name: "testing",
+            bubble_new_admin: "60a39b58f458df0022709fab",
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(201);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta modificar una bombolla no existent", (done) => {
+        chai.request(url)
+        .patch('/bubble')
+        .send({
+            bubble_id: "50aa76e5062c6c00223dafa6",
+            bubble_new_name: "testing",
+            bubble_new_admin: "60a39b58f458df0022709fab",
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+});
+
 var invitation_id;
 
 describe("Donar d'alta una nova invitació a bombolla: ",() => {
