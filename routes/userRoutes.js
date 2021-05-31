@@ -11,6 +11,8 @@ router.get('/:id', userController.getUserInfo);
 router.get('/:id/friends', userController.getUserFriends);
 router.get('/checkEmail/:email', userController.checkEmail);
 
+router.get('/:id/trophies', userController.getTrophies);
+
 router.get('/:id/bubbles', userController.getUserBubbles);
 router.get('/:id/friendRequests', userController.getUserFriendRequests);
 router.get('/:id/bubbleInvitations', userController.getUserBubbleInvitations);

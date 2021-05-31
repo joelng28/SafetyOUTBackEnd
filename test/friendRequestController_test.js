@@ -17,7 +17,7 @@ describe("Realitzar una solicitud d'amistad: ",() => {
         chai.request(url)
         .post('/friendRequest')
         .send({
-            user_id_request: "60a39b58f458df0022709fab",
+            user_id_request: "60b5663ba4e3f1363c47f3bc",
             user_id_requested: "60a3a16bf458df0022709fb7",
         })
         .end(function(err, res){
@@ -63,7 +63,7 @@ describe("Acceptar una solicitud d'amistad: ",() => {
             chai.request(url)
             .post('/friendRequest/')
             .send({
-                user_id_request: "60a39b58f458df0022709fab",
+                user_id_request: "60b5663ba4e3f1363c47f3bc",
                 user_id_requested: "60a3ae6197f5da46b03334e3",
             })
             .end(function(err, response){
@@ -102,14 +102,14 @@ describe("Denegar una solicitud d'amistad: ",() => {
 });
 
 describe("Esborrar contate",() => {
-    it("Retorna status 201 quan s'esborra un contacte", (done) => {
+    it("Retorna status 200 quan s'esborra un contacte", (done) => {
         chai.request(url)
         .delete('/friendRequest/' + '60a39b58f458df0022709fab' + '/deleteFriend')
         .send({
             friend_id: "60a3a16bf458df0022709fb7",
         })
         .end(function(err, res){
-            expect(res).to.have.status(201);
+            expect(res).to.have.status(200);
             done();
         });
     });

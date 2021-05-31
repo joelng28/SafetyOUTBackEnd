@@ -36,8 +36,11 @@ const userSchema = new Schema(
         ],
         friends: [
             {userId: Schema.ObjectId}
-        ]
-
+        ],
+        trophies: [Number],
+        friends_added: Number,
+        chats_begun: Number,
+        notified_assistances:Number
     },
     {timestamps:true}
 );

@@ -59,8 +59,13 @@ exports.signUp = (req, res, next) => {
                     password: req.body.password,
                     birthday: new Date(year, month, day),
                     gender: req.body.gender,
-                    profileImage: req.body.profileImage
+                    profileImage: req.body.profileImage,
+                    friends_added: 0,
+                    chats_begun: 0,
+                    notified_assistances:0
                 });
+
+                user.trophies.push(3);
             
                 user.save()
                     .then(result =>{
@@ -78,6 +83,67 @@ exports.signUp = (req, res, next) => {
 
 };
 
+exports.getTrophies = (req, res, next) => {
+    var user_id = req.params.id;
+    User.findById(user_id)
+    .then(user => {
+        if(!user){
+            res.status(404).json({message:'User not found'});
+
+            const error = new Error("User not found");
+            error.statusCode = 404;
+            throw error;
+        }
+        else{
+
+            var created_at = user.createdAt;
+            var today = new Date()
+
+            var Difference_In_Time = today.getTime() - created_at.getTime();
+            var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+            var trophy = -1;
+
+            if(Difference_In_Days >= 30 && Difference_In_Days < 90){
+                if(!user.trophies.includes(23)){
+                    trophy = 23;
+                }
+            }
+            else if(Difference_In_Days >= 90 && Difference_In_Days < 180){
+                if(!user.trophies.includes(24)){
+                    trophy = 24;
+                }
+            }
+            else if(Difference_In_Days >= 180 && Difference_In_Days < 270){
+                if(!user.trophies.includes(25)){
+                    trophy = 25;
+                }
+            }
+            else if(Difference_In_Days >= 270 && Difference_In_Days < 365){
+                if(!user.trophies.includes(26)){
+                    trophy = 26;
+                }
+            }
+            else if(Difference_In_Days >= 365){
+                if(!user.trophies.includes(27)){
+                    trophy = 27;
+                }
+            }
+
+            if(trophy != -1){
+                User.findOneAndUpdate(
+                    {"_id": user_id},
+                    {$push: {trophies: trophy}},
+                    {new:true}
+                )
+                .then(updatedUser => {
+                    res.status(200).json({trophies: updatedUser.trophies})
+                })
+            }
+            else
+                res.status(200).json({trophies: user.trophies}) 
+        }
+    })
+}
 
 
 exports.logIn = (req, res, next) => {
@@ -276,22 +342,14 @@ exports.logInTerceros = (req, res, next) => {
 
 exports.changeUserInfo = (req, res, next) => {
 
-    user_id = req.params.id;
-    //user_id = Mongoose.Types.ObjectId(user_id);
-
-    new_name = req.body.new_name;
-    new_surnames = req.body.new_surnames;
-    new_password = req.body.new_password;
-    new_gender = req.body.new_gender;
-    new_email = req.body.new_email;
-    new_profileImage = req.body.new_profileImage;
-
+    let user_id = req.params.id;
+    
     const update = { 
-        "name": new_name,
-        "surnames": new_surnames,
-        "password": new_password,
-        "gender": new_gender,
-        "email": new_email,
+        "name": req.body.new_name,
+        "surnames": req.body.new_surnames,
+        "password": req.body.new_password,
+        "gender": req.body.new_gender,
+        "email": req.body.new_email,
         "profileImage": req.body.new_profileImage
     };
 

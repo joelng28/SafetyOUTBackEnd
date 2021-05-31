@@ -31,7 +31,54 @@ exports.postFriendRequest = (req, res, next) => {
 
         friendRequest.save()
         .then(result => {
-            res.status(201).json({message:"A new friend request has been added", request_id: friendRequest.id});
+            let friends_added = request.friends_added;
+            let trophy = -1;
+
+            friends_added = friends_added + 1;
+            
+            switch(friends_added){
+                case 1:
+                    trophy = 6
+                    break;
+                case 5:
+                    trophy = 7
+                    break;
+                case 25:
+                    trophy = 8
+                    break;
+                case 50:
+                    trophy = 9
+                    break;
+                case 100:
+                    trophy = 10
+                    break;
+            }
+            var update;
+            if(trophy != -1){
+                update = {
+                    friends_added: friends_added,
+                    $push: {trophies: trophy}
+                }
+            }
+            else{
+                update = {
+                    friends_added: friends_added 
+                }
+            }
+
+            User.findOneAndUpdate(
+                {"_id": user_id_request},
+                update
+            )
+            .then(function(){
+                res.status(201).json({message:"A new friend request has been added", request_id: friendRequest.id, trophy: trophy});
+            })
+            .catch(err=>{
+                if(!err.statusCode){
+                  err.statusCode = 500;
+             }
+                next(err);
+            });
         })
         .catch(err=>{
             if(!err.statusCode){
@@ -68,7 +115,6 @@ exports.acceptFriendRequest = (req, res, next) => {
 
         request.remove()
             .then(result => {
-                //Model amistad? quantitat amics..
                 Promise.all([
                     User.findOneAndUpdate(
                         {"_id": user_id_request},

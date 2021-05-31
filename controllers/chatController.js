@@ -35,15 +35,58 @@ exports.handleConnection = (socket) => {
                 })
                 room.save()
                 .then(res => {
-                    socket.activeRoom = room._id.toString();
-                    socket.join(room._id.toString());
-                    socket.emit('joined', room._id.toString());
+                    User.findById(data.user1_id)
+                    .then(user => {
+                        let chats_begun = user.chats_begun;
+                        let trophy = -1;
+                        chats_begun = chats_begun + 1;
+                        
+                        switch(chats_begun){
+                            case 1:
+                                trophy = 11
+                                break;
+                            case 5:
+                                trophy = 12
+                                break;
+                            case 25:
+                                trophy = 13
+                                break;
+                            case 50:
+                                trophy = 14
+                                break;
+                            case 100:
+                                trophy = 15
+                                break;
+                        }
+                        var update;
+                        if(trophy != -1){
+                            update = {
+                                chats_begun: chats_begun,
+                                $push: {trophies: trophy}
+                            }
+                        }
+                        else{
+                            update = {
+                                chats_begun: chats_begun 
+                            }
+                        }
+
+                        User.findOneAndUpdate(
+                            {"_id": data.user1_id},
+                            update
+                        )
+                        .then(function(){
+                            socket.activeRoom = room._id.toString();
+                            socket.join(room._id.toString());
+                            socket.emit('joined', {roomId: room._id.toString(), trophy: trophy});
+                        })
+                    })
                 })
             }
             else{
                 socket.activeRoom = chatRoom._id.toString();
                 socket.join(chatRoom._id.toString())
-                socket.emit('joined',chatRoom._id.toString());
+                socket.emit('joined',{roomId: chatRoom._id.toString(), trophy: -1});
             }
         })
     })
@@ -127,6 +170,7 @@ exports.createChat = (req, res, next) => {
             })
             room.save()
             .then(function(){
+
                 res.status(201).json({message:"Chat created successfully", chat_id: room._id.toString()});
             })
         }

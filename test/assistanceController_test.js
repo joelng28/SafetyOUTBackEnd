@@ -16,7 +16,7 @@ describe("Donar d'alta una nova assistència: ",() => {
         chai.request(url)
         .post('/assistance')
         .send({
-            user_id: "60a39b58f458df0022709fab",
+            user_id: "60b565537d88b8096c2e69d3",
             place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {
@@ -72,7 +72,7 @@ describe("Donar d'alta una nova assistència: ",() => {
         chai.request(url)
         .post('/assistance')
         .send({
-            user_id: "60a39b58f458df0022709fab",
+            user_id: "60b565537d88b8096c2e69d3",
             place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {
@@ -161,11 +161,11 @@ describe("Consultar assistències en una data: ",() => {
 
 describe("Modificar assistència: ",() => {
 
-    it("Retorna status 201 quan es modifica una assistència", (done) => {
+    it("Retorna status 200 quan es modifica una assistència", (done) => {
         chai.request(url)
         .patch('/assistance')
         .send({
-            user_id: "60a39b58f458df0022709fab",
+            user_id: "60b565537d88b8096c2e69d3",
             place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval: {
                 startDate: {
@@ -194,7 +194,7 @@ describe("Modificar assistència: ",() => {
 
         })
         .end(function(err, res){
-            expect(res).to.have.status(201);
+            expect(res).to.have.status(200);
             done();
         });
     });
@@ -243,7 +243,7 @@ describe("Eliminar una assistència existent: ",() => {
         chai.request(url)
         .delete('/assistance')
         .send({
-            user_id: "60a39b58f458df0022709fab",
+            user_id: "60b565537d88b8096c2e69d3",
             place_id: "ChIJqwS6fjiuEmsRJAMiOY9MSms",
             dateInterval:{
                 startDate: {

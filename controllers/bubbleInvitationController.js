@@ -76,7 +76,21 @@ exports.acceptInvitation = (req, res, next) => {
                     bubble.members.push({userId:invitee_id});
                     bubble.save()
                         .then(result => {
-                            res.status(200).json({message:"User added to bubble"});
+                            User.findById(invitee_id)
+                            .then(user => {
+                                if(!user.trophies.includes(28)){
+                                    User.findOneAndUpdate(
+                                        {"_id": invitee_id},
+                                        {$push: {trophies: 28}}
+                                    )
+                                    .then(function(){
+                                        res.status(200).json({message:"User added to bubble", trophy:28});
+                                    })
+                                }
+                                else
+                                    res.status(200).json({message:"User added to bubble", trophy:-1});
+                            })
+                            
                         })
                         .catch(err=>{
                             if(!err.statusCode){

@@ -58,7 +58,59 @@ exports.postAssistance = (req, res, next) => {
 
                 assistance.save()
                 .then(result =>{
-                    res.status(201).json({message:"A new assistance record has been added"});
+                    let notified_assistances = user.notified_assistances;
+                    let trophy = -1;
+
+                    notified_assistances = notified_assistances + 1;
+                    
+                    switch(notified_assistances){
+                        case 1:
+                            trophy = 16
+                            break;
+                        case 5:
+                            trophy = 17
+                            break;
+                        case 25:
+                            trophy = 18
+                            break;
+                        case 50:
+                            trophy = 19
+                            break;
+                        case 100:
+                            trophy = 20
+                            break;
+                        case 500:
+                            trophy = 21
+                            break;
+                        case 1000:
+                            trophy = 22
+                            break;
+                    }
+                    var update;
+                    if(trophy != -1){
+                        update = {
+                            notified_assistances: notified_assistances,
+                            $push: {trophies: trophy}
+                        }
+                    }
+                    else{
+                        update = {
+                            notified_assistances: notified_assistances
+                        }
+                    }
+                    User.findOneAndUpdate(
+                        {"_id": user_id},
+                        update
+                    )
+                    .then(function(){
+                        res.status(201).json({message:"A new assistance has been added", trophy: trophy});
+                    })
+                    .catch(err=>{
+                        if(!err.statusCode){
+                        err.statusCode = 500;
+                    }
+                        next(err);
+                    });
                 })
                 .catch(err=>{
                     if(!err.statusCode){
@@ -173,7 +225,28 @@ exports.modifyAssistance = (req,res,next) => {
             error.statusCode = 404;
             throw error;
         }
-        res.status(201).json({message:"Modified correctly"});
+
+        User.findById(userId)
+        .then(user => {
+            if(!user.trophies.includes(4)){
+                User.findOneAndUpdate(
+                    {"_id": userId},
+                    {$push: {trophies: 4}}
+                )
+                .then(function(){
+                    res.status(200).json({message:"Assistance modified", trophy: 4})
+                })
+                .catch(err=>{
+                    if(!err.statusCode){
+                      err.statusCode = 500;
+                 }
+                    next(err);
+                });
+            }
+            else
+                res.status(200).json({message:"Assistance modified", trophy: -1})
+
+        })
     })
     .catch(err=>{
         if(!err.statusCode){
@@ -208,7 +281,27 @@ exports.deleteAssistance = (req, res, next) => {
 
             assistance.remove()
                 .then(result => {
-                    res.status(200).json({message:"The assistance was successfully deleted"});
+                    User.findById(userId)
+                    .then(user => {
+                        if(!user.trophies.includes(5)){
+                            User.findOneAndUpdate(
+                                {"_id": userId},
+                                {$push: {trophies: 5}}
+                            )
+                            .then(function(){
+                                res.status(200).json({message:"Assistance deleted", trophy: 5})
+                            })
+                            .catch(err=>{
+                                if(!err.statusCode){
+                                err.statusCode = 500;
+                            }
+                                next(err);
+                            });
+                        }
+                        else
+                            res.status(200).json({message:"Assistance deleted", trophy: -1})
+
+                    })
                 })
                 .catch(err=>{
                     if(!err.statusCode){
