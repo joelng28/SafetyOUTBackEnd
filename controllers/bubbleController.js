@@ -31,7 +31,18 @@ exports.createBubble = (req, res, next) => {
                         })
                         newbubble.save()
                         .then(result =>{
-                         res.status(201).json({message: 'Bubble created!', bubble_id: newbubble._id.toString()});
+                            if(!user.trophies.includes(28)){
+                                User.findOneAndUpdate(
+                                    {"_id": user_id},
+                                    {$push: {trophies: 28}}
+                                )
+                                .then(function(){
+                                    res.status(201).json({message: 'Bubble created!', bubble_id: newbubble._id.toString(), trophy:28});
+                                })
+                            }
+                            else
+                                res.status(201).json({message: 'Bubble created!', bubble_id: newbubble._id.toString(), trophy:-1});
+                            
                         })
                     .catch(err => {
                         if(!err.statusCode){
