@@ -428,4 +428,11 @@ function containsObject(obj, list) {
     return false;
 }
 
+exports.deleteAccount = (req, res, next) => {
+    var user_id = req.params.id;
+    User.findOneAndDelete({id: user_id})
+    .then(function(){
+        res.status(200).json({message: 'Completed!'});
+    })
+}
 

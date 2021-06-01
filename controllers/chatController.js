@@ -128,6 +128,7 @@ exports.getMessages = (req, res, next) => {
             BubbleChat.findById(chat_id)
             .then(bubbleChat => {
                 if(!bubbleChat){
+                    console.log("IT IS ENTERING HERE")
                     res.status(404).json({message:"A chat with this id could not be found"});
                     const error = new Error("A chat with this id could not be found");
                     error.statusCode = 404;
@@ -136,11 +137,10 @@ exports.getMessages = (req, res, next) => {
                 else{
                     res.status(200).json({messages: bubbleChat.messages});
                 }
-            })
-                        
+            })       
         }
-
-        res.status(200).json({messages: chat.messages});
+        else 
+            res.status(200).json({messages: chat.messages});
     })
     .catch(err => {
         if(!err.statusCode)err.statusCode=500;

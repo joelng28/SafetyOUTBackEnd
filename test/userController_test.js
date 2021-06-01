@@ -159,4 +159,21 @@ describe("Modifica perfil",() => {
 
 });
 
-
+describe("Eliminar compte: ",() => {
+    it("Retorna status 200 quan s'elimina el compte d'un usuari amb éxit", (done) => {
+        chai.request(url)
+        .delete('/user/' + user_id)
+        .end(function(err, res){
+            expect(res).to.have.status(200);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta donar de baixa un compte d'un usuari que no existeix", (done) => {
+        chai.request(url)
+        .delete('/user' + '604ca4f3482d770000499269')
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+});

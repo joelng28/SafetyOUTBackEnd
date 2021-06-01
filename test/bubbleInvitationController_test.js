@@ -193,6 +193,67 @@ describe("Denegar invitació a bombolla: ",() => {
     });
 });
 
+//REVISAR
+
+describe("Donar de baixa a un usuari d'una bombolla: ",() => {
+    it("Retorna status 200 quan es dona de baixa una bombolla", (done) => {
+        chai.request(url)
+        .delete('/bubble/members')
+        .send({
+            bubble_id: bubble_id,
+            user_admin: user_admin,
+            user_deleted: user_deleted
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(200);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta donar de baixa una bombolla que no existeix", (done) => {
+        chai.request(url)
+        .delete('/bubble/members')
+        .send({
+            bubble_id: "606c65b16ccd0a00226ea000",
+            user_deleted: "604ca4f3482d773160499269"
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+});
+
+describe("Deixar una bombolla pel teu compte ",() => {
+    it("Retorna status 200 quan deixes una bombolla pel teu compte", (done) => {
+        chai.request(url)
+        .delete('/bubble/members')
+        .send({
+            bubble_id: bubble_id,
+            user_deleted: user_deleted
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(200);
+            done();
+        });
+    });
+    it("Retorna status 404 quan s'intenta donar de baixa una bombolla que no existeix", (done) => {
+        chai.request(url)
+        .delete('/bubble/members')
+        .send({
+            bubble_id: "606c65b16ccd0a00226ea000",
+            user_deleted: "604ca4f3482d773160499269"
+        })
+        .end(function(err, res){
+            expect(res).to.have.status(404);
+            done();
+        });
+    });
+});
+
+
+
+//FINS AQUI
+
 
 describe("Donar de baixa una bombolla: ",() => {
     it("Retorna status 200 quan es dona de baixa una bombolla", (done) => {

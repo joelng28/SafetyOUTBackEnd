@@ -41,8 +41,6 @@ describe("Crear un nou xat ",() => {
 });
 
 
-
-
 describe("Obtenir missatges d'un xat",() => {
 
     it("Retorna status 200 quan es consulten els missatges d'un xat existent", (done) => {

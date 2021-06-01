@@ -54,6 +54,8 @@ router.get('/:id/friendRequests', userController.getUserFriendRequests);
 router.get('/:id/bubbleInvitations', userController.getUserBubbleInvitations);
 router.post('/loginTerceros', userController.logInTerceros);
 
+
+router.delete('/:id', userController.deleteAccount);
 router.get('/:id/chats', userController.getUserChats);
 
 router.patch('/:id', uploadS3 ,userController.changeUserInfo);
