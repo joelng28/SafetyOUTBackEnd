@@ -347,10 +347,7 @@ exports.changeUserInfo = (req, res, next) => {
     const update = { 
         "name": req.body.new_name,
         "surnames": req.body.new_surnames,
-        "password": req.body.new_password,
-        "gender": req.body.new_gender,
-        "email": req.body.new_email,
-        "profileImage": req.body.new_profileImage
+        "profileImage": req.file.location
     };
 
     User.findByIdAndUpdate(user_id,update)

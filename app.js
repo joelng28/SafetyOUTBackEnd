@@ -37,6 +37,9 @@ app.use((req, res, next) => {
   app.use('/bubbleInvitation', bubbleInvitationRoutes);
   app.use('/bubble', bubbleRoutes)
   app.use('/friendRequest', friendRequestRoutes);
+
+
+
   mongoose
   .connect(
     'mongodb+srv://' + process.env.MONGO_DB_USER + ':' + process.env.MONGO_DB_PASSWORD + '@safetyout.pvtcw.mongodb.net/SafetyOut?retryWrites=true&w=majority',
