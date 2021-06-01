@@ -12,7 +12,7 @@ const shortid = require("shortid");
 
   const s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_ACCESS_KEY_ID
+    secretAccessKey: process.env.AWS_SECRET_KEY
   })
 
   const fileFilter = (req, file, cb) => {
