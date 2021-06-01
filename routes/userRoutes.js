@@ -11,8 +11,8 @@ const shortid = require("shortid");
   const aws = require("aws-sdk");
 
   const s3 = new aws.S3({
-    accessKeyId: "AKIAW3RS5G6KSCAJXL4E",
-    secretAccessKey: "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"
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_KEY
   })
 
   const fileFilter = (req, file, cb) => {
@@ -30,14 +30,14 @@ const shortid = require("shortid");
       bucket: "safetyout",
       acl: "public-read",
       metadata: function(req, file, cb){
-        cb(null, {fieldName: 'profilePicture'});
+        cb(null, {fieldName: 'profileImage'});
       },
       key: function (req, file, cb) {
         cb(null, shortid.generate() + "-" + file.originalname);
       },
     }),
     fileFilter: fileFilter,
-  }).single('profilePicture');
+  }).single('profileImage');
 
 
 router.post('/signup', userController.signUp);
