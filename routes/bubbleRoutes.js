@@ -4,8 +4,9 @@ const { body } = require('express-validator');
 const bubbleController = require('../controllers/bubbleController');
 const router = express.Router();
 
+router.get('/:id', bubbleController.getBubble);
 router.post('/',bubbleController.createBubble);
-router.delete('/',bubbleController.deleteBubble);
-router.patch('/',bubbleController.modifyBubble);
+router.delete('/:id',bubbleController.deleteBubble);
+router.patch('/:id',bubbleController.modifyBubble);
 
 module.exports = router;

@@ -68,7 +68,7 @@ exports.createBubble = (req, res, next) => {
 
 
 exports.deleteBubble = (req, res, next) => {
-    const bubble_id = req.body.bubble_id;
+    const bubble_id = req.params.id;
     
     Bubble.findById(bubble_id)
     .then(bubble => {
@@ -93,8 +93,22 @@ exports.deleteBubble = (req, res, next) => {
     })   
 }
 
+
+exports.getBubble = (req, res, next) => {
+
+    var bubble_id = req.params.id;
+
+    Bubble.findById(bubble_id)
+    .then(bubble => {
+        if(!bubble){
+            res.status(404).json({message: 'This bubble does not exist'});
+        }
+        res.status(200).json({bubble: bubble});
+    })
+}
+
 exports.modifyBubble = (req, res, next) => {
-    bubble_id = req.body.bubble_id;
+    bubble_id = req.params.id;
     bubble_new_name = req.body.bubble_new_name;
     bubble_new_admin = req.body.bubble_new_admin;
     const update = { 
@@ -107,7 +121,7 @@ exports.modifyBubble = (req, res, next) => {
             res.status(404).json({message: 'This user does not administrate a bubble with this name'});
         }
         else {
-           res.status(201).json({message: 'Bubble updated!'});
+           res.status(200).json({message: 'Bubble updated!'});
         }
     })
         .catch(err => {
