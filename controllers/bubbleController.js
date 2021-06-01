@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Bubble = require('../models/bubble');
+const BubbleChat = require('../models/bubbleChat');
 const BubbleInvitation = require('../models/bubbleInvitation');
 const  Mongoose  = require('mongoose');
 
@@ -31,18 +32,25 @@ exports.createBubble = (req, res, next) => {
                         })
                         newbubble.save()
                         .then(result =>{
-                            if(!user.trophies.includes(28)){
-                                User.findOneAndUpdate(
-                                    {"_id": user_id},
-                                    {$push: {trophies: 28}}
-                                )
-                                .then(function(){
-                                    res.status(201).json({message: 'Bubble created!', bubble_id: newbubble._id.toString(), trophy:28});
-                                })
-                            }
-                            else
-                                res.status(201).json({message: 'Bubble created!', bubble_id: newbubble._id.toString(), trophy:-1});
-                            
+
+                            var bubbleChat = new BubbleChat({
+                                bubble_id: newbubble._id
+                            })
+
+                            bubbleChat.save()
+                            .then(function(){
+                                if(!user.trophies.includes(28)){
+                                    User.findOneAndUpdate(
+                                        {"_id": user_id},
+                                        {$push: {trophies: 28}}
+                                    )
+                                    .then(function(){
+                                        res.status(201).json({message: 'Bubble created!', bubble_id: newbubble._id.toString(), trophy:28});
+                                    })
+                                }
+                                else
+                                    res.status(201).json({message: 'Bubble created!', bubble_id: newbubble._id.toString(), trophy:-1});
+                            })
                         })
                     .catch(err => {
                         if(!err.statusCode){
@@ -76,13 +84,13 @@ exports.deleteBubble = (req, res, next) => {
             res.status(404).json({message: 'This bubble does not exist'});
         }
         else {
-            //BubbleInvitation.DeleteMany({bubble_name:bubble_name})
-            //.then(result =>{
+            BubbleChat.findOneAndDelete({bubble_id: bubble_id})
+            .then(function(){
                 bubble.delete()
-                .then(result =>{
-                res.status(200).json({message: 'Bubble deleted!'});
+                .then(function(){
+                    res.status(200).json({message: 'Bubble deleted!'});
                 })
-            //})
+            })
         .catch(err => {
             if(!err.statusCode){
                 err.statusCode = 500;

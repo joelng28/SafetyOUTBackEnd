@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Chat = require('../models/chat');
+const BubbleChat = require('../models/bubbleChat');
 const  Mongoose  = require('mongoose');
 
 
@@ -90,6 +91,15 @@ exports.handleConnection = (socket) => {
             }
         })
     })
+
+    socket.on('joinBubbleChat', (data) => {
+        BubbleChat.findOne({bubble_id: data.bubble_id})
+        .then(chatRoom => {
+            socket.activeRoom = chatRoom._id.toString();
+            socket.join(chatRoom._id.toString());
+            socket.emit('joined', {roomId: chatRoom._id.toString(), trophy: -1});              
+        })
+    })
     
     socket.on('message', (data) => {
         console.log("Un usuario ha enviado un mensaje")
@@ -115,10 +125,19 @@ exports.getMessages = (req, res, next) => {
     Chat.findById(chat_id)
     .then(chat => {
         if(!chat){
-            res.status(404).json({message:"A chat with this id could not be found"});
-            const error = new Error("A chat with this id could not be found");
-            error.statusCode = 404;
-            throw error;               
+            BubbleChat.findById(chat_id)
+            .then(bubbleChat => {
+                if(!bubbleChat){
+                    res.status(404).json({message:"A chat with this id could not be found"});
+                    const error = new Error("A chat with this id could not be found");
+                    error.statusCode = 404;
+                    throw error;   
+                }
+                else{
+                    res.status(200).json({messages: bubbleChat.messages});
+                }
+            })
+                        
         }
 
         res.status(200).json({messages: chat.messages});
