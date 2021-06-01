@@ -30,14 +30,14 @@ const shortid = require("shortid");
       bucket: "safetyout",
       acl: "public-read",
       metadata: function(req, file, cb){
-        cb(null, {fieldName: 'profilePicture'});
+        cb(null, {fieldName: 'profileImage'});
       },
       key: function (req, file, cb) {
         cb(null, shortid.generate() + "-" + file.originalname);
       },
     }),
     fileFilter: fileFilter,
-  }).single('profilePicture');
+  }).single('profileImage');
 
 
 router.post('/signup', userController.signUp);
