@@ -4,6 +4,8 @@ const FriendRequest = require('../models/friendRequest');
 const BubbleInvitation = require('../models/bubbleInvitation');
 const Chat = require('../models/chat');
 const jwt = require("jsonwebtoken");
+const async = require('async');
+const Assistance = require('../models/assistance');
 ObjectId = require('mongodb').ObjectID;
 
 
@@ -447,17 +449,60 @@ function containsObject(obj, list) {
 
 exports.deleteAccount = (req, res, next) => {
     var user_id = req.params.id;
-    User.findOneAndDelete({_id: user_id})
-    .then(function(){
 
-        await User.findById(user_id).exec();
-        res.status(200).json({message: 'Completed!'});
-    })
-    .catch(err => {
-        if(!err.statusCode){
-            err.statusCode = 500;
+    User.findById(user_id)
+    .then(user => {
+        if(!user){
+            res.status(404).json({message: 'This user does not exist'});
         }
-        next(err);
-    });
+        else{
+            async.filter(user.friends, function(elem, callback){
+                User.findOneAndUpdate({_id : elem.userId}, {$pull: {friends: {userId: user._id}}}, function(err, doc) {
+                    callback(err == null && doc != null);
+                });
+            });
+            async.filter(user.bubbles, function(elem, callback){
+                Bubble.findOneAndUpdate({_id : elem.bubbleId}, {$pull: {members: {userId: user._id}}}, function(err, doc) {
+                    callback(err == null && doc != null);
+                });
+            });
+
+            Promise.all([
+                Chat.deleteMany({
+                    $or:[
+                        {user1_id: user_id},
+                        {user2_id: user_id}
+                    ]
+                }),
+                FriendRequest.deleteMany({
+                    $or:[
+                        {user_id_request: user_id},
+                        {user_id_requested: user_id}
+                    ] 
+                }),
+                BubbleInvitation.deleteMany({
+                    $or:[
+                        {invitee: user_id},
+                        {invited_by: user_id}
+                    ] 
+                }),
+                Assistance.deleteMany({
+                    user_id: user_id
+                })  
+            ])
+            .then(function(){
+                User.findOneAndDelete({_id: user_id})
+                .then(function(){
+                    res.status(200).json({message: 'Completed!'});
+                })
+                .catch(err => {
+                    if(!err.statusCode){
+                        err.statusCode = 500;
+                    }
+                    next(err);
+                });
+            })
+        }
+    })
 }
 

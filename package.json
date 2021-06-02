@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/joelng28/SafetyOUTBackEnd#readme",
   "dependencies": {
+    "async": "^3.2.0",
     "aws-sdk": "^2.918.0",
     "bcrypt": "^5.0.1",
     "chai": "^4.3.4",

@@ -73,31 +73,37 @@ exports.acceptInvitation = (req, res, next) => {
             Bubble.findById(bubble_id)
             .then(bubble => {
                 if(bubble) {
-                    bubble.members.push({userId:invitee_id});
-                    bubble.save()
-                        .then(result => {
-                            User.findById(invitee_id)
-                            .then(user => {
-                                if(!user.trophies.includes(28)){
-                                    User.findOneAndUpdate(
-                                        {"_id": invitee_id},
-                                        {$push: {trophies: 28}}
-                                    )
-                                    .then(function(){
-                                        res.status(200).json({message:"User added to bubble", trophy:28});
-                                    })
-                                }
-                                else
-                                    res.status(200).json({message:"User added to bubble", trophy:-1});
-                            })
-                            
-                        })
-                        .catch(err=>{
-                            if(!err.statusCode){
-                                err.statusCode = 500;
+                    Promise.all([
+                        Bubble.findByIdAndUpdate(bubble_id, {
+                            $push: {members: {userId: invitee_id}} 
+                        }),
+                        User.findByIdAndUpdate(invitee_id, {
+                            $push: {bubbles: {bubbleId: bubble_id}}
+                        }),
+                    ])
+                    .then(function(){
+                        User.findById(invitee_id)
+                        .then(user => {
+                            if(!user.trophies.includes(28)){
+                                User.findOneAndUpdate(
+                                    {"_id": invitee_id},
+                                    {$push: {trophies: 28}}
+                                )
+                                .then(function(){
+                                    res.status(200).json({message:"User added to bubble", trophy:28});
+                                })
                             }
-                            next(err);
-                        });
+                            else
+                                res.status(200).json({message:"User added to bubble", trophy:-1});
+                        })
+                        
+                    })
+                    .catch(err=>{
+                        if(!err.statusCode){
+                            err.statusCode = 500;
+                        }
+                        next(err);
+                    });
                 }
                 else {
                     res.status(404).json({message:"This bubble does no longer exist"});
@@ -117,15 +123,6 @@ exports.acceptInvitation = (req, res, next) => {
         }
         next(err);
     });
-}
-
-function UserInArray(array,userId,id) {
-    if(array.length>0) {
-        for(var i in array) {
-            if(array[i][userId]==id) return true;
-        }
-    }
-    return false;
 }
 
 exports.denyInvitation = (req, res, next) => {
@@ -158,6 +155,3 @@ exports.denyInvitation = (req, res, next) => {
         });
 }
 
-exports.getInvitation = (req, res, next) => {
-    
-}
