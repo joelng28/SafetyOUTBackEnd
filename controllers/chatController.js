@@ -119,7 +119,7 @@ exports.handleConnection = (socket) => {
                         bubbleChatRoom.messages.push({user_id: data.author, username: user.name + ' ' + user.surname, message: data.message});
                         bubbleChatRoom.save()
                         .then(function(){
-                            io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message);
+                            io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message, user.name + ' ' + user.surname);
                         })
                     })               
                 })
@@ -130,7 +130,7 @@ exports.handleConnection = (socket) => {
                     chatRoom.messages.push({user_id: data.author, username: user.name + ' ' + user.surname, message: data.message});
                     chatRoom.save()
                     .then(function(){
-                        io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message);
+                        io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message, user.name + ' ' + user.surname);
                     })
                 })     
             }          
