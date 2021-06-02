@@ -15,14 +15,6 @@ const shortid = require("shortid");
     secretAccessKey: process.env.AWS_SECRET_KEY
   })
 
-  const fileFilter = (req, file, cb) => {
-    if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg'){
-      cb(null, true);
-    }
-    else{
-      cb(null, false);
-    }
-  };
 
   const uploadS3 = multer({
     storage: multerS3({
@@ -35,8 +27,7 @@ const shortid = require("shortid");
       key: function (req, file, cb) {
         cb(null, shortid.generate() + "-" + file.originalname);
       },
-    }),
-    fileFilter: fileFilter,
+    })
   }).single('profileImage');
 
 

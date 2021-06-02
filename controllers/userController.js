@@ -59,7 +59,7 @@ exports.signUp = (req, res, next) => {
                     password: req.body.password,
                     birthday: new Date(year, month, day),
                     gender: req.body.gender,
-                    profileImage: req.body.profileImage,
+                    profileImage: "https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg",
                     friends_added: 0,
                     chats_begun: 0,
                     notified_assistances:0
@@ -344,27 +344,51 @@ exports.changeUserInfo = (req, res, next) => {
 
     let user_id = req.params.id;
     
-    const update = { 
-        "name": req.body.new_name,
-        "surnames": req.body.new_surnames,
-        "profileImage": req.file.location
-    };
-
-    User.findByIdAndUpdate(user_id,update)
+    User.findById(user_id)
     .then(user => {
-        if(!user) {
-            res.status(404).json({message: 'This user does not exist'});
+        let update;
+        let trophy = -1;
+        if(req.file.location !== null){
+            if(!user.trophies.includes(1)){
+                trophy = 1;
+                update = { 
+                    "name": req.body.new_name,
+                    "surnames": req.body.new_surnames,
+                    "profileImage": req.file.location,
+                    $push: {trophies: 1}
+                }
+            }
+            else{
+                update = { 
+                    "name": req.body.new_name,
+                    "surnames": req.body.new_surnames,
+                    "profileImage": req.file.location
+                }
+            }
         }
-        else {
-           res.status(201).json({message: 'User information modified!'});
+        else{
+            update = { 
+                "name": req.body.new_name,
+                "surnames": req.body.new_surnames,
+            }
         }
+
+        User.findByIdAndUpdate(user_id,update)
+        .then(user => {
+            if(!user) {
+                res.status(404).json({message: 'This user does not exist'});
+            }
+            else {
+                res.status(201).json({message: 'User information modified!', trophy: trophy});
+            }
+        })
+        .catch(err => {
+            if(!err.statusCode){
+                    err.statusCode = 500;
+            }
+            next(err);
+        });
     })
-    .catch(err => {
-        if(!err.statusCode){
-                err.statusCode = 500;
-        }
-        next(err);
-    });
 }
 
 exports.deleteFriend = (req,res,next) => {
