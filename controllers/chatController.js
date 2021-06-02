@@ -116,10 +116,10 @@ exports.handleConnection = (socket) => {
                     if(bubbleChatRoom)console.log("Se ha encontrado una bubble chat para enviar mensaje")
                     User.findById(data.author)
                     .then(user => {
-                        bubbleChatRoom.messages.push({user_id: data.author, username: user.name + ' ' + user.surname, message: data.message});
+                        bubbleChatRoom.messages.push({user_id: data.author, username: user.name + ' ' + user.surnames, message: data.message});
                         bubbleChatRoom.save()
                         .then(function(){
-                            io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message, user.name + ' ' + user.surname);
+                            io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message, user.name);
                         })
                     })               
                 })
@@ -127,10 +127,10 @@ exports.handleConnection = (socket) => {
             else{
                 User.findById(data.author)
                 .then(user => {
-                    chatRoom.messages.push({user_id: data.author, username: user.name + ' ' + user.surname, message: data.message});
+                    chatRoom.messages.push({user_id: data.author, username: user.name + ' ' + user.surnames, message: data.message});
                     chatRoom.save()
                     .then(function(){
-                        io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message, user.name + ' ' + user.surname);
+                        io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message, user.name);
                     })
                 })     
             }          
