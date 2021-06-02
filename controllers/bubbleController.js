@@ -116,9 +116,9 @@ exports.getBubble = (req, res, next) => {
 }
 
 exports.modifyBubble = (req, res, next) => {
-    bubble_id = req.params.id;
-    bubble_new_name = req.body.bubble_new_name;
-    bubble_new_admin = req.body.bubble_new_admin;
+    var bubble_id = req.params.id;
+    var bubble_new_name = req.body.bubble_new_name;
+    var bubble_new_admin = req.body.bubble_new_admin;
     const update = { 
         "name": bubble_new_name,
         "admin": bubble_new_admin
@@ -132,15 +132,15 @@ exports.modifyBubble = (req, res, next) => {
            res.status(200).json({message: 'Bubble updated!'});
         }
     })
-        .catch(err => {
-            if(!err.statusCode){
-                err.statusCode = 500;
-            }
-            next(err);
-         });
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+        });
 }
 
-exports.deleteBubbleContact = (req, res, next) => {
+exports.deleteBubbleMember = (req, res, next) => {
     const bubbleId = req.body.bubbleId;
     const user_id=req.body.user_id;
     const user_id2=req.body.user_id_delete;
@@ -177,9 +177,10 @@ exports.deleteBubbleContact = (req, res, next) => {
                     
 }
 
-exports.leaveBubble = (req, res, next) => {
-    const bubbleId = req.body.bubbleId;
-    const user_id=req.body.user_id;
+exports.deleteBubbleMember = (req, res, next) => {
+    const bubbleId = req.params.id;
+    const user_id = req.params.memberId;
+
     User.findOne({_id: user_id})
     .then(user => {
             if(user){
@@ -187,14 +188,18 @@ exports.leaveBubble = (req, res, next) => {
                     {"_id": bubbleId},
                     {$pull: {members: {userId: user_id}}}
                 )
-                .then(function(){
-                    User.findOneAndUpdate(
-                        {"_id": user_id},
-                        {$pull: {bubbles: {bubbleId: bubbleId}}}
-                    )
-                    .then(function(){
-                        res.status(200).json({message: 'Completed!'});
-                    })
+                .then(bubble => {
+                    if(!bubble)
+                        res.status(404).json({message: 'A bubble with this id does not exist'});
+                    else{
+                        User.findOneAndUpdate(
+                            {"_id": user_id},
+                            {$pull: {bubbles: {bubbleId: bubbleId}}}
+                        )
+                        .then(function(){
+                            res.status(200).json({message: 'Completed!'});
+                        })
+                    }
 
                 })
             }

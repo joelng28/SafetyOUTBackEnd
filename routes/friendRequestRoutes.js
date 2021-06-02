@@ -7,6 +7,6 @@ const router = express.Router();
 router.post('/', friendRequestController.postFriendRequest);
 router.post('/:id/accept', friendRequestController.acceptFriendRequest);
 router.post('/:id/deny', friendRequestController.denyFriendRequest);
-router.get('/:id', friendRequestController.getFriendRequest);
+
 
 module.exports = router;

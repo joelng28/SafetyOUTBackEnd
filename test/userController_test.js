@@ -24,8 +24,7 @@ describe("Registre d'usuari: ",() => {
             email: userEmail,
             password: "123456",
             birthday: "1999-10-13",
-            gender: "Male",
-            profileImage: "path/to/profile/image" 
+            gender: "Male"
         })
         .end(function(err, res){
             expect(res).to.have.status(201);
@@ -42,8 +41,7 @@ describe("Registre d'usuari: ",() => {
             email: userEmail,
             password: "123456",
             birthday: new Date(1999, 9, 12),
-            gender: "Male",
-            profileImage: "path/to/profile/image" 
+            gender: "Male"
         })
         .end(function(err, res){
             expect(res).to.have.status(409);
@@ -130,17 +128,13 @@ describe("Consulta perfil",() => {
 
 
 describe("Modifica perfil",() => {
-    it("Retorna status 201 quan es consulta un perfil qualsevol amb èxit", (done) => {
+    it("Retorna status 201 quan es modifica un perfil qualsevol amb èxit", (done) => {
         chai.request(url)
-        .patch('/user/' + user_id + '/modifyInfo')
+        .patch('/user/' + user_id)
         .send({
-            new_name: "Sergi",
-            new_surnames: "Doce Planas",
-            new_email: userEmail,
-            new_password: "123456",
-            new_birthday: new Date(1999, 9, 12),
-            new_gender: "Male",
-            new_profileImage: "empty" 
+            new_name: "Nou nom",
+            new_surnames: "Nou cognom",
+            profileImage: null   
         })
         .end(function(err, res){
             expect(res).to.have.status(201);
@@ -149,7 +143,12 @@ describe("Modifica perfil",() => {
     });
     it("Retorna status 404 quan s'intenta modificar la informació d'un usuari que no existeix", (done) => {
         chai.request(url)
-        .get('/user/' + "604ca4f3482d773160499000")
+        .patch('/user/' + "604ca4f3482d773160499000")
+        .send({
+            new_name: "Nou nom",
+            new_surnames: "Nou Cognom",
+            profileImage: null   
+        })
         .end(function(err, res){
             expect(res).to.have.status(404);
             done();

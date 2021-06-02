@@ -343,12 +343,12 @@ exports.logInTerceros = (req, res, next) => {
 exports.changeUserInfo = (req, res, next) => {
 
     let user_id = req.params.id;
-    
+    console.log(req.file);
     User.findById(user_id)
     .then(user => {
         let update;
         let trophy = -1;
-        if(req.file.location !== null){
+        if(typeof req.file !== 'undefined'){
             if(!user.trophies.includes(1)){
                 trophy = 1;
                 update = { 
@@ -449,6 +449,8 @@ exports.deleteAccount = (req, res, next) => {
     var user_id = req.params.id;
     User.findOneAndDelete({_id: user_id})
     .then(function(){
+
+        await User.findById(user_id).exec();
         res.status(200).json({message: 'Completed!'});
     })
     .catch(err => {

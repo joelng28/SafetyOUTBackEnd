@@ -17,8 +17,8 @@ describe("Realitzar una solicitud d'amistad: ",() => {
         chai.request(url)
         .post('/friendRequest')
         .send({
-            user_id_request: "60b5663ba4e3f1363c47f3bc",
-            user_id_requested: "60a3a16bf458df0022709fb7",
+            user_id_request: "60b7e90ceac83d3f80f730bd",
+            user_id_requested: "60b7e8c7eac83d3f80f730bc",
         })
         .end(function(err, res){
             expect(res).to.have.status(201);
@@ -30,8 +30,8 @@ describe("Realitzar una solicitud d'amistad: ",() => {
         chai.request(url)
         .post('/friendRequest')
         .send({
-            user_id_request: "60a39b58f458df0022709fab",
-            user_id_requested: "60a3a16bf458df0022709000",
+            user_id_request: "60b7e90ceac83d3f80f730bd",
+            user_id_requested: "60b7e8c7eac83d3f80f73000",
         })
         .end(function(err, res){
             expect(res).to.have.status(404);
@@ -42,8 +42,8 @@ describe("Realitzar una solicitud d'amistad: ",() => {
         chai.request(url)
         .post('/friendRequest')
         .send({
-            user_id_request: "60a39b58f458df0022000fab",
-            user_id_requested: "60a3a16bf458df0022709fb7",
+            user_id_request: "60b7e90ceac83d3f80f73000",
+            user_id_requested: "60b7e8c7eac83d3f80f730bc",
         })
         .end(function(err, res){
             expect(res).to.have.status(404);
@@ -63,8 +63,8 @@ describe("Acceptar una solicitud d'amistad: ",() => {
             chai.request(url)
             .post('/friendRequest/')
             .send({
-                user_id_request: "60b5663ba4e3f1363c47f3bc",
-                user_id_requested: "60a3ae6197f5da46b03334e3",
+                user_id_request: "60b7e90ceac83d3f80f730bd",
+                user_id_requested: "60b7eb3f571a2d0dd025e6cd",
             })
             .end(function(err, response){
                 request_id = response.body.request_id;
@@ -101,13 +101,13 @@ describe("Denegar una solicitud d'amistad: ",() => {
     });
 });
 
-describe("Esborrar contate",() => {
+
+//AQUESTA FUNCIONALITAT CORRESPON AL USER CONTROLLER ENCARA QUE ESTIGUI AQUÍ
+
+describe("Esborrar contacte",() => {
     it("Retorna status 200 quan s'esborra un contacte", (done) => {
         chai.request(url)
-        .delete('/friendRequest/' + '60a39b58f458df0022709fab' + '/deleteFriend')
-        .send({
-            friend_id: "60a3a16bf458df0022709fb7",
-        })
+        .delete('/user/' + '60b7e90ceac83d3f80f730bd' + '/friends/' + '60b7e8c7eac83d3f80f730bc')
         .end(function(err, res){
             expect(res).to.have.status(200);
             done();
@@ -115,10 +115,7 @@ describe("Esborrar contate",() => {
     });
     it("Retorna status 404 quan l'usuari no existeix", (done) => {
         chai.request(url)
-        .delete('/friendRequest/' + '50a39b58f458df0022000fab' + '/deleteFriend')
-        .send({
-            friend_id: "60a3a16bf458df0022709fb7",
-        })
+        .delete('/user/' + '60b7e90ceac8300080f730bd' + '/friends/' + '60b7e8c7eac83d3f80f730bc')
         .end(function(err, res){
             expect(res).to.have.status(404);
             done();
@@ -126,10 +123,7 @@ describe("Esborrar contate",() => {
     });
     it("Retorna status 404 quan l'amic no existeix", (done) => {
         chai.request(url)
-        .delete('/friendRequest/' + '60a39b58f458df0022709fab' + '/deleteFriend')
-        .send({
-            friend_id: "50a39b58f458df0022000fab",
-        })
+        .delete('/user/' + '60b7e90ceac83d3f80f730bd' + '/friends/' + '60b7e90ceac83d3f80f73000')
         .end(function(err, res){
             expect(res).to.have.status(404);
             done();
@@ -137,10 +131,7 @@ describe("Esborrar contate",() => {
     });
     it("Retorna status 404 quan els usuaris no son amics", (done) => {
         chai.request(url)
-        .delete('/friendRequest/' + '60a39b58f458df0022709fab' + '/deleteFriend')
-        .send({
-            friend_id: "60a3a16bf458df0022709fb7",
-        })
+        .delete('/user/' + '60b7e90ceac83d3f80f730bd' + '/friends/' + '60b7e8c7eac83d3f80f730bc')
         .end(function(err, res){
             expect(res).to.have.status(404);
             done();

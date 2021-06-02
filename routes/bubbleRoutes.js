@@ -8,5 +8,6 @@ router.get('/:id', bubbleController.getBubble);
 router.post('/',bubbleController.createBubble);
 router.delete('/:id',bubbleController.deleteBubble);
 router.patch('/:id',bubbleController.modifyBubble);
+router.delete('/:id/members/:memberId', bubbleController.deleteBubbleMember);
 
 module.exports = router;
