@@ -93,8 +93,10 @@ exports.handleConnection = (socket) => {
     })
 
     socket.on('joinBubbleChat', (data) => {
+        console.log("Se ha entrado en joinBubbleChat")
         BubbleChat.findOne({bubble_id: data.bubble_id})
         .then(chatRoom => {
+            console.log("Se ha encontrado una bubble chat para unirse")
             socket.activeRoom = chatRoom._id.toString();
             socket.join(chatRoom._id.toString());
             socket.emit('joined', {roomId: chatRoom._id.toString(), trophy: -1});              
@@ -108,14 +110,30 @@ exports.handleConnection = (socket) => {
         
         Chat.findById(data.chatRoom)
         .then(chatRoom => {
-            User.findById(data.author)
-            .then(user => {
-                chatRoom.messages.push({user_id: data.author, username: user.modelName, message: data.message});
-                chatRoom.save()
-                .then(function(){
-                    io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message);
+            if(!chatRoom){
+                BubbleChat.findById(data.chatRoom)
+                .then(bubbleChatRoom => {
+                    if(bubbleChatRoom)console.log("Se ha encontrado una bubble chat para enviar mensaje")
+                    User.findById(data.author)
+                    .then(user => {
+                        bubbleChatRoom.messages.push({user_id: data.author, username: user.name + ' ' + user.surname, message: data.message});
+                        bubbleChatRoom.save()
+                        .then(function(){
+                            io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message);
+                        })
+                    })               
                 })
-            })               
+            }
+            else{
+                User.findById(data.author)
+                .then(user => {
+                    chatRoom.messages.push({user_id: data.author, username: user.name + ' ' + user.surname, message: data.message});
+                    chatRoom.save()
+                    .then(function(){
+                        io.in(data.chatRoom).emit('message', data.chatRoom, data.author, data.message);
+                    })
+                })     
+            }          
         })
     })
 }
