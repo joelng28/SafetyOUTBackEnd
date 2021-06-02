@@ -454,9 +454,15 @@ function containsObject(obj, list) {
 
 exports.deleteAccount = (req, res, next) => {
     var user_id = req.params.id;
-    User.findOneAndDelete({id: user_id})
+    User.findOneAndDelete({_id: user_id})
     .then(function(){
         res.status(200).json({message: 'Completed!'});
     })
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });
 }
 
