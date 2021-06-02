@@ -25,7 +25,7 @@ const shortid = require("shortid");
         cb(null, {fieldName: 'profileImage'});
       },
       key: function (req, file, cb) {
-        cb(null, shortid.generate() + "-" + file.originalname);
+        cb(null, shortid.generate() + "-" + shortid.generate() + '.png');
       },
     })
   }).single('profileImage');
