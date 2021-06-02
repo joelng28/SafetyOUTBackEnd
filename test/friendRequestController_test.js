@@ -7,7 +7,8 @@ const { request } = require("chai");
 chai.use(chaiHttp);
 const localhost_url = "http://localhost:8080";
 const heroku_url = "https://safetyout.herokuapp.com"
-const url = localhost_url;
+var url = localhost_url;
+//url = heroku_url;
 
 var request_id;
 
