@@ -392,45 +392,40 @@ exports.changeUserInfo = (req, res, next) => {
 }
 
 exports.deleteFriend = (req,res,next) => {
-    user_id = req.body.user_id;
-    friend_id = req.body.friend_id;
-    User.findById(user_id)
-    .then(user => {
-        if(user) {
-              User.findById(friend_id)
-              .then( friend => {
-                  if(friend) {
-                      friends=containsObject(friend_id,user.friends);
-                      containsObject(user_id,friend.friends);
-                      if(friends) {
-                      user.save()
-                      .catch(err => {
-                        if(!err.statusCode){
-                            err.statusCode = 500;
-                        }
-                        next(err);
-                    });
-                        friend.save()
-                              .then(result =>{
-                                  res.status(201).json({message: "Friend deleted"});
-                               })
-                            .catch(err => {
-                            if(!err.statusCode){
-                                err.statusCode = 500;
-                            }
-                            next(err);
-                            });
-                        }
-                    else res.status(404).json({message: "These users are not friends"});
-                  }
-                  else {
-                    res.status(404).json({message: 'The friend does not exist'});
-                  }
-              })
+    var user_id = req.params.id;
+    var friend_id = req.params.friendId;
+
+    Promise.all([
+        User.findById(user_id),
+        User.findById(friend_id),
+    ]).then(([user, friend]) => {
+
+        if(!user || !friend){
+            res.status(404).json({message: 'This user does not exist'});
         }
-        else {
-            res.status(404).json({message: 'The user does not exist'});
-        }
+        else{
+            if(containsObject(friend_id, user.friends) && containsObject(user_id, friend.friends)){
+                Promise.all([
+                    User.findOneAndUpdate(
+                        {"_id": friend_id},
+                        {$pull: {friends: {userId: user_id}}}
+                    ),
+                    User.findOneAndUpdate(
+                        {"_id": user_id},
+                        {$pull: {friends: {userId: friend_id}}}
+                    )
+                ]).then(function(){
+                    res.status(200).json({message:"Friend deleted"});
+                })
+                .catch(err => {
+                    if(!err.statusCode){
+                        err.statusCode = 500;
+                    }
+                    next(err);
+                });
+            }
+            else res.status(404).json({message: 'The users are not friends'});
+        }   
     })
     .catch(err => {
         if(!err.statusCode){
@@ -444,11 +439,9 @@ function containsObject(obj, list) {
     var i;
     for (i = 0; i < list.length; i++) {
         if (list[i].userId == obj) {
-            list.splice(i,1)
             return true;
         }
     }
-
     return false;
 }
 

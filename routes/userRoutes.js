@@ -47,6 +47,7 @@ router.post('/loginTerceros', userController.logInTerceros);
 
 
 router.delete('/:id', userController.deleteAccount);
+router.delete('/:id/friends/:friendId', userController.deleteFriend)
 router.get('/:id/chats', userController.getUserChats);
 
 router.patch('/:id', uploadS3 ,userController.changeUserInfo);
